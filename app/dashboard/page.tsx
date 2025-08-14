@@ -162,24 +162,6 @@ export default function DashboardPage() {
       <DashboardHeader userEmail={user?.email || ""} />
 
       <main className="container mx-auto px-4 py-2">
-        {/* Usage Guide - Compact */}
-        <div className="mb-2 px-3 py-2 bg-blue-50 rounded-lg">
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-3">
-              <Keyboard className="h-3 w-3" />
-              <Badge variant="outline" className="text-xs py-0">Ctrl+/</Badge>
-              <span>Tìm kiếm</span>
-              <Badge variant="outline" className="text-xs py-0">Enter</Badge>
-              <span>Xác nhận</span>
-              <Badge variant="outline" className="text-xs py-0">Esc</Badge>
-              <span>Xóa</span>
-            </div>
-            <div className="text-muted-foreground">
-              {sampleIds.length} ID mẫu có sẵn
-            </div>
-          </div>
-        </div>
-
         <Tabs defaultValue="search" className="space-y-4">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="search">Tìm Kiếm & Duyệt Hồ Sơ</TabsTrigger>
