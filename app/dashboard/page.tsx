@@ -68,8 +68,25 @@ export default function DashboardPage() {
       setStats(getStudentStatistics())
     }, 30000)
 
-    return () => clearInterval(interval)
-  }, [])
+    // Listen for approval status changes to refresh current student
+    const handleApprovalChange = (e: CustomEvent) => {
+      const { mssv } = e.detail
+      if (currentStudent && currentStudent.mssv === mssv) {
+        // Refresh the current student data
+        const result = searchStudentById(currentStudent.mssv)
+        if (result.success && result.student) {
+          setCurrentStudent(result.student)
+        }
+      }
+    }
+
+    window.addEventListener('approvalStatusChanged', handleApprovalChange as EventListener)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('approvalStatusChanged', handleApprovalChange as EventListener)
+    }
+  }, [currentStudent])
 
   // Keyboard shortcuts
   useEffect(() => {
