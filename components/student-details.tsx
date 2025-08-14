@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { User, Calendar, GraduationCap, MapPin, FileText, Award, BarChart3, CreditCard, CheckCircle2, XCircle, Clock } from "lucide-react"
+import { User, Calendar, GraduationCap, MapPin, FileText, Award, BarChart3, CreditCard, CheckCircle2, XCircle, Clock, Mail, Phone } from "lucide-react"
 import type { Student } from "@/lib/mock-data"
 import { setApprovalStatus, getCurrentUser } from "@/lib/mock-auth"
 
@@ -85,11 +85,11 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   const getApprovalBadge = (status: 'pending' | 'approved' | 'rejected') => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-green-100 text-green-800 flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Đã duyệt</Badge>
+        return <Badge className="bg-green-100 text-green-800 flex items-center gap-1 text-sm px-3 py-1"><CheckCircle2 className="h-4 w-4" /> Đã duyệt</Badge>
       case 'rejected':
-        return <Badge className="bg-red-100 text-red-800 flex items-center gap-1"><XCircle className="h-3 w-3" /> Từ chối</Badge>
+        return <Badge className="bg-red-100 text-red-800 flex items-center gap-1 text-sm px-3 py-1"><XCircle className="h-4 w-4" /> Từ chối</Badge>
       default:
-        return <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1"><Clock className="h-3 w-3" /> Chờ duyệt</Badge>
+        return <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1 text-sm px-3 py-1"><Clock className="h-4 w-4" /> Chờ duyệt</Badge>
     }
   }
 
@@ -106,6 +106,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   }
 
   const handleDocumentCheck = (documentIndex: number, checked: boolean) => {
+    // Disable editing if already approved
+    if (currentStudent.trang_thai_duyet === 'approved') return
+
     setCheckedDocuments(prev => ({
       ...prev,
       [documentIndex]: checked
@@ -113,6 +116,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   }
 
   const handleFeeStatusChange = (checked: boolean) => {
+    // Disable editing if already approved
+    if (currentStudent.trang_thai_duyet === 'approved') return
+
     setCurrentStudent(prev => ({
       ...prev,
       tinh_trang_hoc_phi: checked
@@ -120,171 +126,261 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-full overflow-hidden">
       <Card className="h-full">
-        <CardContent className="p-6 h-full">
-          <div className="grid grid-cols-10 gap-6 h-full">
-            {/* Left Column - Basic Info */}
-            <div className="col-span-4 space-y-4">
-              {/* Header */}
-              <div className="pb-4 border-b">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xl font-bold">{currentStudent.ho_ten}</h2>
-                  <Badge className={getGenderBadge(currentStudent.gioi_tinh)} style={{ fontSize: '14px', padding: '4px 8px' }}>
-                    {currentStudent.gioi_tinh}
-                  </Badge>
-                </div>
-                <div className="text-base text-muted-foreground mb-2">MSSV: {currentStudent.mssv}</div>
+        <CardContent className="p-4 h-full">
+          {/* Header Section - Fixed */}
+          <div className="mb-4 pb-3 border-b">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-1">{currentStudent.ho_ten}</h2>
+                <div className="text-lg text-muted-foreground font-medium">MSSV: {currentStudent.mssv}</div>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <Badge className={getGenderBadge(currentStudent.gioi_tinh)} style={{ fontSize: '16px', padding: '6px 12px' }}>
+                  {currentStudent.gioi_tinh}
+                </Badge>
                 {getApprovalBadge(currentStudent.trang_thai_duyet)}
               </div>
+            </div>
+          </div>
 
-              {/* Basic Info */}
-              <div className="space-y-3 text-base">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-semibold">Thông tin cơ bản</span>
+          {/* Main Content Grid - 4 columns for maximum info */}
+          <div className="grid grid-cols-12 gap-4 h-[calc(100%-140px)]">
+            {/* Column 1: Personal Info (3 cols) */}
+            <div className="col-span-3 space-y-3">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <User className="h-5 w-5 text-blue-600" />
+                  <span className="font-semibold text-lg text-blue-800">Thông tin cá nhân</span>
                 </div>
-                <div className="grid gap-2 pl-6">
-                  <div><span className="text-muted-foreground">Ngày sinh:</span> {formatDate(currentStudent.ngay_sinh)}</div>
-                  <div><span className="text-muted-foreground">CCCD:</span> {currentStudent.cccd}</div>
-                  <div><span className="text-muted-foreground">Số báo danh:</span> {currentStudent.so_bao_danh}</div>
-                  <div><span className="text-muted-foreground">Thường trú:</span> {currentStudent.dia_chi_thuong_tru}</div>
-                  <div><span className="text-muted-foreground">Năm TN:</span> {currentStudent.nam_tot_nghiep}</div>
-                  <div><span className="text-muted-foreground">Trường:</span> {currentStudent.truong_thpt}</div>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">Ngày sinh:</span>
+                    <span className="font-semibold">{formatDate(currentStudent.ngay_sinh)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">CCCD:</span>
+                    <span className="font-semibold">{currentStudent.cccd}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">SBD:</span>
+                    <span className="font-semibold">{currentStudent.so_bao_danh}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Academic Info */}
-              <div className="space-y-3 text-base">
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-semibold">Thông tin học tập</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Mail className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold text-lg text-green-800">Liên hệ</span>
                 </div>
-                <div className="grid gap-2 pl-6">
-                  <div><span className="text-muted-foreground">Khoa:</span> {currentStudent.khoa}</div>
-                  <div><span className="text-muted-foreground">Ngành:</span> {currentStudent.nganh}</div>
-                  <div><span className="text-muted-foreground">PT Nhập học:</span> {currentStudent.phuong_thuc_nhap_hoc}</div>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground font-medium">Email:</span>
+                    <span className="font-medium text-blue-600 text-xs break-all">{currentStudent.email}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">SĐT:</span>
+                    <span className="font-semibold">{currentStudent.dien_thoai}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-5 w-5 text-red-600" />
+                  <span className="font-semibold text-lg text-red-800">Địa chỉ</span>
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium leading-relaxed">{currentStudent.dia_chi_thuong_tru}</span>
                 </div>
               </div>
             </div>
 
-            {/* Middle Column - Documents & Fee */}
-            <div className="col-span-4 space-y-4 flex flex-col h-full">
-              {/* Fee Status */}
-              <div className="space-y-3 text-base flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-semibold">Học phí</span>
+            {/* Column 2: Academic Info (3 cols) */}
+            <div className="col-span-3 space-y-3">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <GraduationCap className="h-5 w-5 text-purple-600" />
+                  <span className="font-semibold text-lg text-purple-800">Học tập</span>
                 </div>
-                <div className="flex items-center space-x-3 pl-6">
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground font-medium">Khoa:</span>
+                    <span className="font-semibold text-purple-700">{currentStudent.khoa}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground font-medium">Ngành:</span>
+                    <span className="font-semibold">{currentStudent.nganh}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">Năm TN:</span>
+                    <span className="font-semibold">{currentStudent.nam_tot_nghiep}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground font-medium">Trường THPT:</span>
+                    <span className="font-medium leading-tight">{currentStudent.truong_thpt}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground font-medium">PT Nhập học:</span>
+                    <span className="font-medium leading-tight text-blue-700">{currentStudent.phuong_thuc_nhap_hoc}</span>
+                  </div>
+                </div>
+              </div>
+
+              {currentStudent.doat_giai && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Award className="h-5 w-5 text-yellow-600" />
+                    <span className="font-semibold text-lg text-yellow-800">Giải thưởng</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium text-green-700 leading-tight">{currentStudent.doat_giai}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Column 3: Scores & Fee (2 cols) */}
+            <div className="col-span-2 space-y-3">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart3 className="h-5 w-5 text-orange-600" />
+                  <span className="font-semibold text-lg text-orange-800">Điểm thi</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="text-center p-2 bg-blue-50 rounded-lg border">
+                    <div className="text-2xl font-bold text-blue-600">{currentStudent.diem_toan || '-'}</div>
+                    <div className="text-sm font-medium text-muted-foreground">Toán</div>
+                  </div>
+                  <div className="text-center p-2 bg-green-50 rounded-lg border">
+                    <div className="text-2xl font-bold text-green-600">{currentStudent.diem_sinh_hoc || '-'}</div>
+                    <div className="text-sm font-medium text-muted-foreground">Sinh</div>
+                  </div>
+                  <div className="text-center p-2 bg-purple-50 rounded-lg border">
+                    <div className="text-2xl font-bold text-purple-600">{currentStudent.diem_tieng_anh || '-'}</div>
+                    <div className="text-sm font-medium text-muted-foreground">Anh</div>
+                  </div>
+                  <div className="text-center p-2 bg-orange-50 rounded-lg border">
+                    <div className="text-2xl font-bold text-orange-600">{currentStudent.diem_tong || '-'}</div>
+                    <div className="text-sm font-medium text-muted-foreground">Tổng</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <CreditCard className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold text-lg text-green-800">Học phí</span>
+                </div>
+                <div className="text-center p-3 bg-green-50 rounded-lg border">
+                  <div className="text-lg font-bold text-green-600">{formatCurrency(currentStudent.so_tien_hoc_phi)}</div>
+                </div>
+                <div className="flex items-center space-x-2">
                   <Checkbox
                     id="fee-status"
                     checked={currentStudent.tinh_trang_hoc_phi}
                     onCheckedChange={handleFeeStatusChange}
-                    className="h-5 w-5"
+                    className="h-4 w-4"
+                    disabled={currentStudent.trang_thai_duyet === 'approved'}
                   />
-                  <label htmlFor="fee-status" className="text-base font-medium">
-                    Đã đóng học phí ({formatCurrency(currentStudent.so_tien_hoc_phi)})
+                  <label htmlFor="fee-status" className={`text-sm font-medium ${currentStudent.trang_thai_duyet === 'approved' ? 'text-muted-foreground' : 'text-green-700'}`}>
+                    Đã đóng học phí
                   </label>
-                </div>
-              </div>
-
-              {/* Documents */}
-              <div className="space-y-3 text-base flex-grow flex flex-col min-h-0">
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-semibold">Hồ sơ ({currentStudent.ho_so_can_thiet.length})</span>
-                </div>
-                <div className="pl-6 flex-grow overflow-y-auto min-h-0">
-                  <div className="space-y-2 pb-2">
-                    {currentStudent.ho_so_can_thiet.map((document, index) => (
-                      <div key={index} className="flex items-start space-x-3 text-sm">
-                        <Checkbox
-                          id={`doc-${index}`}
-                          checked={checkedDocuments[index] !== undefined ? checkedDocuments[index] : true}
-                          onCheckedChange={(checked: boolean) => handleDocumentCheck(index, checked)}
-                          className="h-4 w-4 mt-0.5 flex-shrink-0"
-                        />
-                        <label htmlFor={`doc-${index}`} className="flex-1 leading-relaxed cursor-pointer">
-                          {document}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Scores & Actions */}
-            <div className="col-span-2 space-y-4 flex flex-col h-full">
-              {/* Scores */}
-              <div className="space-y-3 text-base">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-semibold">Điểm thi</span>
-                </div>
-                <div className="grid grid-cols-1 gap-3 pl-6">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <div className="text-xl font-bold text-blue-600">{currentStudent.diem_toan || '-'}</div>
-                    <div className="text-sm text-muted-foreground">Toán</div>
-                  </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <div className="text-xl font-bold text-green-600">{currentStudent.diem_sinh_hoc || '-'}</div>
-                    <div className="text-sm text-muted-foreground">Sinh</div>
-                  </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg">
-                    <div className="text-xl font-bold text-purple-600">{currentStudent.diem_tieng_anh || '-'}</div>
-                    <div className="text-sm text-muted-foreground">Anh</div>
-                  </div>
-                  <div className="text-center p-3 bg-orange-50 rounded-lg">
-                    <div className="text-xl font-bold text-orange-600">{currentStudent.diem_tong || '-'}</div>
-                    <div className="text-sm text-muted-foreground">Tổng</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex-grow flex flex-col justify-end pt-4">
+            {/* Column 4: Actions & Documents (4 cols) */}
+            <div className="col-span-4 space-y-3">
+              {/* Action Buttons at Top */}
+              <div className="space-y-2">
                 {currentStudent.trang_thai_duyet === 'pending' ? (
-                  <div className="space-y-3">
+                  <div className="flex gap-2">
                     <Button
                       onClick={() => handleApproval('approved')}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
                     >
                       <CheckCircle2 className="h-5 w-5 mr-2" />
                       Duyệt
                     </Button>
                     <Button
                       onClick={() => handleApproval('rejected')}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-base font-semibold"
+                      variant="destructive"
+                      className="px-4 py-3 text-sm font-semibold"
                     >
-                      <XCircle className="h-5 w-5 mr-2" />
+                      <XCircle className="h-4 w-4 mr-1" />
                       Từ chối
                     </Button>
                   </div>
                 ) : currentStudent.trang_thai_duyet === 'approved' ? (
-                  <div className="space-y-3">
-                    <div className="text-sm text-muted-foreground text-center p-3 bg-green-50 rounded-lg">
-                      <div className="font-medium text-green-800">Đã duyệt</div>
-                      <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
-                      <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
+                  <div className="space-y-2">
+                    <div className="text-center p-2 bg-green-50 rounded-lg border">
+                      <div className="font-semibold text-green-800 text-base">✅ Đã duyệt</div>
+                      <div className="text-xs font-medium">Bởi: {currentStudent.nguoi_duyet}</div>
+                      <div className="text-xs">{formatDate(currentStudent.ngay_duyet || null)}</div>
                     </div>
                     <Button
                       onClick={() => handleApproval('pending')}
                       variant="outline"
-                      className="w-full border-yellow-600 text-yellow-600 hover:bg-yellow-50 py-3 text-base font-semibold"
+                      className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50 py-2 text-sm"
                     >
-                      <Clock className="h-5 w-5 mr-2" />
+                      <Clock className="h-4 w-4 mr-1" />
                       Hủy duyệt
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground text-center p-4 bg-red-50 rounded-lg">
-                    <div className="font-medium text-red-800">Đã từ chối</div>
-                    <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
-                    <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
+                  <div className="space-y-2">
+                    <div className="text-center p-2 bg-red-50 rounded-lg border">
+                      <div className="font-semibold text-red-800 text-base">❌ Đã từ chối</div>
+                      <div className="text-xs font-medium">Bởi: {currentStudent.nguoi_duyet}</div>
+                      <div className="text-xs">{formatDate(currentStudent.ngay_duyet || null)}</div>
+                    </div>
+                    <Button
+                      onClick={() => handleApproval('pending')}
+                      variant="outline"
+                      className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50 py-2 text-sm"
+                    >
+                      <Clock className="h-4 w-4 mr-1" />
+                      Khôi phục
+                    </Button>
                   </div>
                 )}
+              </div>
+
+              {/* Documents List */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                  <span className="font-semibold text-lg text-blue-800">Hồ sơ ({currentStudent.ho_so_can_thiet.length})</span>
+                </div>
+                <div className="space-y-1 max-h-64 overflow-y-auto">
+                  {currentStudent.ho_so_can_thiet.map((document, index) => (
+                    <div key={index} className="flex items-start space-x-2 text-sm">
+                      <Checkbox
+                        id={`doc-${index}`}
+                        checked={checkedDocuments[index] !== undefined ? checkedDocuments[index] : true}
+                        onCheckedChange={(checked: boolean) => handleDocumentCheck(index, checked)}
+                        className="h-4 w-4 mt-0.5 flex-shrink-0"
+                        disabled={currentStudent.trang_thai_duyet === 'approved'}
+                      />
+                      <label htmlFor={`doc-${index}`} className={`flex-1 leading-relaxed cursor-pointer text-xs ${currentStudent.trang_thai_duyet === 'approved' ? 'text-muted-foreground' : ''}`}>
+                        {document}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -293,3 +389,4 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
     </div>
   )
 }
+
