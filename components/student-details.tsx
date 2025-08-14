@@ -42,15 +42,15 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
     }
   }
 
-  const handleApproval = (status: 'approved' | 'rejected') => {
+  const handleApproval = (status: 'approved' | 'rejected' | 'pending') => {
     if (!user) return
 
     setApprovalStatus(currentStudent.mssv, status, user.email)
     setCurrentStudent(prev => ({
       ...prev,
       trang_thai_duyet: status,
-      nguoi_duyet: user.email,
-      ngay_duyet: new Date().toISOString()
+      nguoi_duyet: status === 'pending' ? undefined : user.email,
+      ngay_duyet: status === 'pending' ? undefined : new Date().toISOString()
     }))
   }
 
@@ -203,20 +203,26 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       <CheckCircle2 className="h-5 w-5 mr-2" />
                       Duyệt
                     </Button>
+                  </div>
+                ) : currentStudent.trang_thai_duyet === 'approved' ? (
+                  <div className="space-y-3">
+                    <div className="text-sm text-muted-foreground text-center p-3 bg-green-50 rounded-lg">
+                      <div className="font-medium text-green-800">Đã duyệt</div>
+                      <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
+                      <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
+                    </div>
                     <Button
-                      onClick={() => handleApproval('rejected')}
+                      onClick={() => handleApproval('pending')}
                       variant="outline"
-                      className="w-full border-red-600 text-red-600 hover:bg-red-50 py-3 text-base font-semibold"
+                      className="w-full border-yellow-600 text-yellow-600 hover:bg-yellow-50 py-3 text-base font-semibold"
                     >
-                      <XCircle className="h-5 w-5 mr-2" />
-                      Từ chối
+                      <Clock className="h-5 w-5 mr-2" />
+                      Hủy duyệt
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="font-medium">
-                      {currentStudent.trang_thai_duyet === 'approved' ? 'Đã duyệt' : 'Đã từ chối'}
-                    </div>
+                  <div className="text-sm text-muted-foreground text-center p-4 bg-red-50 rounded-lg">
+                    <div className="font-medium text-red-800">Đã từ chối</div>
                     <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
                     <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
                   </div>
