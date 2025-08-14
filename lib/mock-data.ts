@@ -1,39 +1,43 @@
+// Updated interface to match CSV structure with cleaner field names
 export interface Student {
   id: number
-  mssv: string // Student ID
-  ho_ten: string // Full name
-  gioi_tinh: string // Gender
-  ngay_sinh: string // Date of birth
-  cccd: string // Citizen ID
-  ho_khau: string // Household registration
-  dia_chi_thuong_tru: string // Permanent address
-  so_bao_danh: string // Registration number
-  truong_thpt: string // High school
+  mssv: string // MaSV - Student ID from CSV
+  ho_ten: string // HoTen - Full name from CSV
+  gioi_tinh: string // Phai - Gender from CSV
+  ngay_sinh: string // NgaySinh - Date of birth from CSV
+  cccd: string // CMND - Citizen ID from CSV
+  email: string // Email from CSV
+  dien_thoai: string // DienThoai - Phone from CSV
+  so_bao_danh: string // SBD - Test number from CSV
+  ma_hs: string // MaHS - Student code from CSV
+  ho_khau: string // HoKhau - Household registration from CSV
+  ma_nganh: string // MaNganh - Major code from CSV
+  ten_nganh: string // TenNganh - Major name from CSV
+  truong_thpt: string // Truong_THPT - High school from CSV
+  doat_giai: string // DoatGiai - Awards from CSV
+  phuong_thuc: string // DTT field - Admission method from CSV
+  diem_tt: number | null // Diem_TT - Total score from CSV
+
+  // System functionality fields (mock data)
+  created_at: string
+  updated_at: string
+  nam_tot_nghiep: number
+  tinh_trang_hoc_phi: boolean
+  so_tien_hoc_phi: number
+  phuong_thuc_nhap_hoc: string
+  ho_so_can_thiet: string[]
+  trang_thai_duyet: 'pending' | 'approved' | 'rejected'
+  nguoi_duyet?: string
+  ngay_duyet?: string
+  khoa: string
+  nganh: string
+
+  // Display fields for compatibility
+  dia_chi_thuong_tru: string
   diem_toan: number | null
   diem_sinh_hoc: number | null
   diem_tieng_anh: number | null
   diem_tong: number | null
-  dieu_kien_trung_tuyen: string | null
-  nganh_trung_tuyen: string | null
-  ma_nganh: string | null
-  ten_nganh: string | null
-  doi_tuong_ut: string | null
-  khu_vuc_ut: string | null
-  sbd: string | null
-  created_at: string
-  updated_at: string
-
-  // New fields
-  nam_tot_nghiep: number // Graduation year
-  tinh_trang_hoc_phi: boolean // Fee payment status
-  so_tien_hoc_phi: number // Tuition fee amount in VND
-  phuong_thuc_nhap_hoc: string // Admission method
-  ho_so_can_thiet: string[] // Required documents
-  trang_thai_duyet: 'pending' | 'approved' | 'rejected' // Approval status
-  nguoi_duyet?: string // Approver
-  ngay_duyet?: string // Approval date
-  khoa: string // Faculty
-  nganh: string // Major
 }
 
 export interface AdmissionMethod {
@@ -87,10 +91,9 @@ export const ADMISSION_METHODS: AdmissionMethod[] = [
       "Bản chính Giấy báo nhập học",
       "Bản sao trích lục Giấy khai sinh",
       "Bản chính Giấy chứng nhận tốt nghiệp tạm thời năm 2024",
-      "Bản chính học bạ THPT",
+      "Bản sao học bạ THPT (mang theo bản chính để đối chiếu)",
       "Lý lịch sinh viên (in trực tiếp từ trang Portal của Trường)",
-      "Phiếu đăng ký nhận thông tin học tập sinh viên",
-      "Giấy xác nhận xếp loại học lực và hạnh kiểm"
+      "Phiếu đăng ký nhận thông tin học tập sinh viên"
     ]
   },
   {
@@ -102,47 +105,14 @@ export const ADMISSION_METHODS: AdmissionMethod[] = [
       "Bản sao trích lục Giấy khai sinh",
       "Bản chính Giấy chứng nhận tốt nghiệp tạm thời năm 2024",
       "Bản sao học bạ THPT (mang theo bản chính để đối chiếu)",
-      "Bản sao Giấy chứng nhận kết quả thi THPT",
+      "Bản sao kết quả thi năng lực/đánh giá tư duy",
       "Lý lịch sinh viên (in trực tiếp từ trang Portal của Trường)",
-      "Phiếu đăng ký nhận thông tin học tập sinh viên",
-      "Chứng chỉ ngoại ngữ (nếu có)"
-    ]
-  },
-  {
-    id: 5,
-    name: "Phương thức 5 - Xét tuyển năng khiếu",
-    documents: [
-      "Hai ảnh thẻ 4×6",
-      "Bản chính Giấy báo nhập học",
-      "Bản sao trích lục Giấy khai sinh",
-      "Bản chính Giấy chứng nhận tốt nghiệp tạm thời năm 2024",
-      "Bản sao học bạ THPT (mang theo bản chính để đối chiếu)",
-      "Lý lịch sinh viên (in trực tiếp từ trang Portal của Trường)",
-      "Phiếu đăng ký nhận thông tin học tập sinh viên",
-      "Giấy chứng nhận năng khiếu đặc biệt",
-      "Hồ sơ thành tích năng khiếu",
-      "Bằng chứng về khả năng đặc biệt trong lĩnh vực chuyên môn"
-    ]
-  },
-  {
-    id: 6,
-    name: "Phương thức 6 - Xét tuyển riêng",
-    documents: [
-      "Hai ảnh thẻ 4×6",
-      "Bản chính Giấy báo nhập học",
-      "Bản sao trích lục Giấy khai sinh",
-      "Bản chính Giấy chứng nhận tốt nghiệp tạm thời năm 2024",
-      "Bản sao học bạ THPT (mang theo bản chính để đối chiếu)",
-      "Lý lịch sinh viên (in trực tiếp từ trang Portal của Trường)",
-      "Phiếu đăng ký nhận thông tin học tập sinh viên",
-      "Hồ sơ chứng minh điều kiện xét tuyển riêng",
-      "Giấy chứng nhận kết quả kỳ thi riêng",
-      "Các giấy tờ chứng minh thuộc diện ưu tiên đặc biệt"
+      "Phiếu đăng ký nhận thông tin học tập sinh viên"
     ]
   }
 ]
 
-// Mock faculties from HCMUS website
+// Mock faculties
 export const FACULTIES: Faculty[] = [
   {
     id: "fit",
@@ -150,28 +120,10 @@ export const FACULTIES: Faculty[] = [
     majors: [
       "Công nghệ thông tin",
       "Khoa học máy tính",
-      "Trí tuệ nhân tạo",
-      "Công nghệ thông tin (CT tăng cường tiếng Anh)",
-      "Khoa học máy tính (CT tiên tiến)",
-      "Công nghệ thông tin (CT cử nhân tài năng)"
-    ]
-  },
-  {
-    id: "geology",
-    name: "Khoa Địa chất",
-    majors: [
-      "Địa chất học",
-      "Kỹ thuật địa chất",
-      "Kinh tế đất đai"
-    ]
-  },
-  {
-    id: "fetel",
-    name: "Khoa Điện tử - Viễn thông",
-    majors: [
-      "Kỹ thuật điện tử – viễn thông",
-      "Thiết kế vi mạch",
-      "Kỹ thuật điện tử – viễn thông (CT tăng cường tiếng Anh)"
+      "Hệ thống thông tin",
+      "Kỹ thuật phần mềm",
+      "Mạng máy tính và truyền thông dữ liệu",
+      "Trí tuệ nhân tạo"
     ]
   },
   {
@@ -180,17 +132,42 @@ export const FACULTIES: Faculty[] = [
     majors: [
       "Hóa học",
       "Hóa học (CT tăng cường tiếng Anh)",
-      "Công nghệ kỹ thuật hóa học (CT tăng cường tiếng Anh)",
-      "Hóa học (CT cử nhân tài năng)"
+      "Công nghệ hóa học",
+      "Công nghệ thực phẩm",
+      "Hóa dược",
+      "Công nghệ sinh học"
+    ]
+  },
+  {
+    id: "geology",
+    name: "Khoa Địa chất",
+    majors: [
+      "Địa chất học",
+      "Địa vật lý",
+      "Địa kỹ thuật",
+      "Kỹ thuật địa chất",
+      "Thạch học - Khoáng vật học"
+    ]
+  },
+  {
+    id: "fetel",
+    name: "Khoa Điện tử - Viễn thông",
+    majors: [
+      "Kỹ thuật điện tử - viễn thông",
+      "Công nghệ kỹ thuật điều khiển và tự động hóa",
+      "Kỹ thuật y sinh",
+      "Thiết kế vi mạch bán dẫn",
+      "Kỹ thuật Robot"
     ]
   },
   {
     id: "mst",
-    name: "Khoa Khoa học Vật liệu",
+    name: "Khoa Khoa học và Công nghệ Vật liệu",
     majors: [
       "Khoa học vật liệu",
       "Công nghệ vật liệu",
-      "Khoa học vật liệu (CT tăng cường tiếng Anh)"
+      "Vật liệu nano",
+      "Công nghệ vật liệu polyme và composite"
     ]
   },
   {
@@ -251,271 +228,225 @@ export const FACULTIES: Faculty[] = [
 
 // Sample student IDs for testing
 export const SAMPLE_STUDENT_IDS = [
-  "24120001", "24120002", "24120003", "24120004", "24130001"
+  "24180001", "24180002", "24150113", "24110116", "24150125"
 ]
 
-// Mock student data
+// Mock student data based on CSV structure
 export const MOCK_STUDENTS: Student[] = [
   {
     id: 1,
-    mssv: "24120001",
-    ho_ten: "Nguyễn Văn An",
-    gioi_tinh: "Nam",
-    ngay_sinh: "2006-03-15",
-    cccd: "001206012345",
-    ho_khau: "123 Lê Lợi, Quận 1, TP.HCM",
-    dia_chi_thuong_tru: "123 Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM",
-    so_bao_danh: "21120001",
-    truong_thpt: "THPT Lê Hồng Phong",
-    diem_toan: 8.5,
-    diem_sinh_hoc: null,
-    diem_tieng_anh: 7.8,
-    diem_tong: 24.2,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Công nghệ thông tin",
-    ma_nganh: "7480201",
-    ten_nganh: "Công nghệ thông tin",
-    doi_tuong_ut: null,
-    khu_vuc_ut: "KV1",
-    sbd: "21120001",
+    mssv: "24180001", // From CSV
+    ho_ten: "HUỲNH MINH KHÔI", // From CSV  
+    gioi_tinh: "Nam", // From CSV
+    ngay_sinh: "2006-07-02", // From CSV
+    cccd: "08020600****", // From CSV (masked)
+    email: "huynhminhkhoia1.c3hn2021@gmail.com", // From CSV
+    dien_thoai: "039597****", // From CSV (masked)
+    so_bao_danh: "49010875", // From CSV
+    ma_hs: "PYZIAX", // From CSV
+    ho_khau: "Huyện Đức Hòa, Long An", // From CSV
+    ma_nganh: "7420201", // From CSV
+    ten_nganh: "Công nghệ Sinh học", // From CSV
+    truong_thpt: "THPT chuyên tỉnh Long An", // Mock data
+    doat_giai: "Giải Nhì - Kỳ thi khoa học kỹ thuật cấp quốc gia - Lĩnh vực Hóa học - Năm 2024", // From CSV
+    phuong_thuc: "XTT_BoGD", // From CSV
+    diem_tt: 0, // From CSV
+
+    // System functionality fields (mock)
     created_at: "2024-08-20T08:00:00Z",
     updated_at: "2024-08-20T08:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: false,
-    so_tien_hoc_phi: 12500000, // 12.5 triệu VND
-    phuong_thuc_nhap_hoc: "Phương thức 2 - Xét tuyển dựa trên kết quả thi THPT",
-    ho_so_can_thiet: ADMISSION_METHODS[1].documents,
+    so_tien_hoc_phi: 12500000,
+    phuong_thuc_nhap_hoc: "Xét tuyển thẳng theo quy định của Bộ Giáo dục & Đào tạo 2024",
+    ho_so_can_thiet: ADMISSION_METHODS[0].documents,
     trang_thai_duyet: 'pending',
-    khoa: "Khoa Công nghệ Thông tin",
-    nganh: "Công nghệ thông tin"
+    khoa: "Khoa Sinh học",
+    nganh: "Công nghệ Sinh học",
+
+    // Display fields
+    dia_chi_thuong_tru: "Huyện Đức Hòa, Long An",
+    diem_toan: 8.5,
+    diem_sinh_hoc: 9.2,
+    diem_tieng_anh: null,
+    diem_tong: 0
   },
   {
     id: 2,
-    mssv: "24120002",
-    ho_ten: "Trần Thị Bình",
-    gioi_tinh: "Nữ",
-    ngay_sinh: "2006-05-20",
-    cccd: "001206023456",
-    ho_khau: "456 Nguyễn Thị Minh Khai, Quận 3, TP.HCM",
-    dia_chi_thuong_tru: "456 Nguyễn Thị Minh Khai, Phường Võ Thị Sáu, Quận 3, TP.HCM",
-    so_bao_danh: "21120002",
-    truong_thpt: "THPT Trưng Vương",
-    diem_toan: 9.0,
-    diem_sinh_hoc: 8.5,
-    diem_tieng_anh: null,
-    diem_tong: 25.5,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Khoa học máy tính",
-    ma_nganh: "7480101",
-    ten_nganh: "Khoa học máy tính",
-    doi_tuong_ut: null,
-    khu_vuc_ut: "KV1",
-    sbd: "21120002",
-    created_at: "2024-08-20T09:00:00Z",
-    updated_at: "2024-08-20T09:00:00Z",
+    mssv: "24180002", // From CSV
+    ho_ten: "LÊ HOÀNG TRUNG", // From CSV
+    gioi_tinh: "Nam", // From CSV
+    ngay_sinh: "2006-09-29", // From CSV
+    cccd: "09120600****", // From CSV (masked)
+    email: "trungkg2992006@gmail.com", // From CSV
+    dien_thoai: "094806****", // From CSV (masked)
+    so_bao_danh: "54003432", // From CSV
+    ma_hs: "CYTPET", // From CSV
+    ho_khau: "Thành phố Rạch Giá, Kiên Giang", // From CSV
+    ma_nganh: "7420201", // From CSV
+    ten_nganh: "Công nghệ Sinh học", // From CSV
+    truong_thpt: "THPT chuyên Huỳnh Mẫn Đạt, Kiên Giang", // Mock data
+    doat_giai: "Giải Ba - Kỳ thi chọn học sinh giỏi cấp quốc gia- Môn Sinh học - Năm 2024", // From CSV
+    phuong_thuc: "XTT_BoGD", // From CSV
+    diem_tt: 0, // From CSV
+
+    // System functionality fields (mock)
+    created_at: "2024-08-20T08:30:00Z",
+    updated_at: "2024-08-20T08:30:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: true,
-    so_tien_hoc_phi: 11800000, // 11.8 triệu VND
-    phuong_thuc_nhap_hoc: "Phương thức 1 - Xét tuyển thẳng và ưu tiên",
+    so_tien_hoc_phi: 12500000,
+    phuong_thuc_nhap_hoc: "Xét tuyển thẳng theo quy định của Bộ Giáo dục & Đào tạo 2024",
     ho_so_can_thiet: ADMISSION_METHODS[0].documents,
     trang_thai_duyet: 'approved',
-    nguoi_duyet: "admin@gmail.com",
-    ngay_duyet: "2024-08-21T10:00:00Z",
-    khoa: "Khoa Công nghệ Thông tin",
-    nganh: "Khoa học máy tính"
+    nguoi_duyet: "admin@hcmus.edu.vn",
+    ngay_duyet: "2024-08-21T10:30:00Z",
+    khoa: "Khoa Sinh học",
+    nganh: "Công nghệ Sinh học",
+
+    // Display fields
+    dia_chi_thuong_tru: "Thành phố Rạch Giá, Kiên Giang",
+    diem_toan: 7.8,
+    diem_sinh_hoc: 9.5,
+    diem_tieng_anh: null,
+    diem_tong: 0
   },
   {
     id: 3,
-    mssv: "24130001",
-    ho_ten: "Lê Hoàng Cường",
-    gioi_tinh: "Nam",
-    ngay_sinh: "2006-01-10",
-    cccd: "001206034567",
-    ho_khau: "789 Võ Văn Tần, Quận 3, TP.HCM",
-    dia_chi_thuong_tru: "789 Võ Văn Tần, Phường 6, Quận 3, TP.HCM",
-    so_bao_danh: "21130001",
-    truong_thpt: "THPT Gia Định",
-    diem_toan: 8.8,
-    diem_sinh_hoc: 8.2,
-    diem_tieng_anh: 8.0,
-    diem_tong: 25.0,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Toán học",
-    ma_nganh: "7460101",
-    ten_nganh: "Toán học",
-    doi_tuong_ut: "01",
-    khu_vuc_ut: "KV2-NT",
-    sbd: "21130001",
+    mssv: "24150113", // From CSV
+    ho_ten: "NGUYỄN TRƯƠNG THÁI HẰNG", // From CSV
+    gioi_tinh: "Nữ", // From CSV
+    ngay_sinh: "2006-07-22", // From CSV
+    cccd: "08230600****", // From CSV (masked)
+    email: "ntth220706@gmail.com", // From CSV
+    dien_thoai: "036276****", // From CSV (masked)
+    so_bao_danh: "53007937", // From CSV
+    ma_hs: "YTTC7G", // From CSV
+    ho_khau: "Phường 5, Thành phố Mỹ Tho, Tiền Giang", // From CSV
+    ma_nganh: "7420101", // From CSV
+    ten_nganh: "Sinh học", // From CSV
+    truong_thpt: "THPT Nguyễn Đình Chiểu, Tiền Giang", // From CSV
+    doat_giai: "", // From CSV
+    phuong_thuc: "UTX_DHQG", // From CSV
+    diem_tt: 8.92, // From CSV
+
+    // System functionality fields (mock)
+    created_at: "2024-08-20T09:00:00Z",
+    updated_at: "2024-08-20T09:00:00Z",
+    nam_tot_nghiep: 2024,
+    tinh_trang_hoc_phi: false,
+    so_tien_hoc_phi: 11500000,
+    phuong_thuc_nhap_hoc: "ƯTXT Học sinh Giỏi các trường THPT theo quy định của ĐHQG-HCM 2024",
+    ho_so_can_thiet: ADMISSION_METHODS[0].documents,
+    trang_thai_duyet: 'pending',
+    khoa: "Khoa Sinh học",
+    nganh: "Sinh học",
+
+    // Display fields
+    dia_chi_thuong_tru: "Phường 5, Thành phố Mỹ Tho, Tiền Giang",
+    diem_toan: 8.6,
+    diem_sinh_hoc: 8.3,
+    diem_tieng_anh: null,
+    diem_tong: 8.92
+  },
+  {
+    id: 4,
+    mssv: "24110116", // From CSV
+    ho_ten: "LÝ GIA KHANG", // From CSV
+    gioi_tinh: "Nam", // From CSV
+    ngay_sinh: "2006-03-25", // From CSV
+    cccd: "07920603****", // From CSV (masked)
+    email: "khang25032006@gmail.com", // From CSV
+    dien_thoai: "037601****", // From CSV (masked)
+    so_bao_danh: "02054042", // From CSV
+    ma_hs: "TGPUVK", // From CSV
+    ho_khau: "Phường Hiệp Tân, Quận Tân Phú, TP.HCM", // From CSV
+    ma_nganh: "7460101_NN", // From CSV
+    ten_nganh: "Nhóm ngành Toán học, Toán ứng dụng, Toán tin", // From CSV
+    truong_thpt: "THPT Tạ Quang Bửu, Tp. Hồ Chí Minh", // From CSV
+    doat_giai: "", // From CSV
+    phuong_thuc: "XTT_DHQG", // From CSV
+    diem_tt: 9.47, // From CSV
+
+    // System functionality fields (mock)
+    created_at: "2024-08-20T09:30:00Z",
+    updated_at: "2024-08-20T09:30:00Z",
+    nam_tot_nghiep: 2024,
+    tinh_trang_hoc_phi: true,
+    so_tien_hoc_phi: 11000000,
+    phuong_thuc_nhap_hoc: "ƯTXTT Học sinh Giỏi nhất Trường THPT theo quy định của ĐHQG-HCM 2024",
+    ho_so_can_thiet: ADMISSION_METHODS[0].documents,
+    trang_thai_duyet: 'approved',
+    nguoi_duyet: "admin@hcmus.edu.vn",
+    ngay_duyet: "2024-08-21T14:15:00Z",
+    khoa: "Khoa Toán - Tin học",
+    nganh: "Toán học",
+
+    // Display fields
+    dia_chi_thuong_tru: "Phường Hiệp Tân, Quận Tân Phú, TP.HCM",
+    diem_toan: 9.5,
+    diem_sinh_hoc: null,
+    diem_tieng_anh: null,
+    diem_tong: 9.47
+  },
+  {
+    id: 5,
+    mssv: "24150125", // From CSV
+    ho_ten: "HÀ NGUYỄN CHU THỊ VÂN ANH", // From CSV
+    gioi_tinh: "Nữ", // From CSV
+    ngay_sinh: "2006-09-17", // From CSV
+    cccd: "07030600****", // From CSV (masked)
+    email: "anhhnctv.d.2124@gmail.com", // From CSV
+    dien_thoai: "083643****", // From CSV (masked)
+    so_bao_danh: "44000067", // From CSV
+    ma_hs: "", // From CSV (empty)
+    ho_khau: "Huyện Bàu Bàng, Bình Dương", // From CSV
+    ma_nganh: "7420101", // From CSV
+    ten_nganh: "Sinh học", // From CSV
+    truong_thpt: "THPT chuyên Hùng Vương, Bình Dương", // From CSV
+    doat_giai: "", // From CSV
+    phuong_thuc: "THPT", // From CSV
+    diem_tt: 24.15, // From CSV
+
+    // System functionality fields (mock)
     created_at: "2024-08-20T10:00:00Z",
     updated_at: "2024-08-20T10:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: false,
-    so_tien_hoc_phi: 10500000, // 10.5 triệu VND
-    phuong_thuc_nhap_hoc: "Phương thức 3 - Xét tuyển dựa trên học bạ THPT",
-    ho_so_can_thiet: ADMISSION_METHODS[2].documents,
-    trang_thai_duyet: 'pending',
-    khoa: "Khoa Toán - Tin học",
-    nganh: "Toán học"
-  },
-  {
-    id: 4,
-    mssv: "24120003",
-    ho_ten: "Phạm Thị Dung",
-    gioi_tinh: "Nữ",
-    ngay_sinh: "2006-07-25",
-    cccd: "001206045678",
-    ho_khau: "101 Pasteur, Quận 1, TP.HCM",
-    dia_chi_thuong_tru: "101 Pasteur, Phường Nguyễn Thái Bình, Quận 1, TP.HCM",
-    so_bao_danh: "21120003",
-    truong_thpt: "THPT Marie Curie",
-    diem_toan: 8.2,
-    diem_sinh_hoc: 8.8,
-    diem_tieng_anh: 8.5,
-    diem_tong: 25.5,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Trí tuệ nhân tạo",
-    ma_nganh: "7480301",
-    ten_nganh: "Trí tuệ nhân tạo",
-    doi_tuong_ut: null,
-    khu_vuc_ut: "KV1",
-    sbd: "21120003",
-    created_at: "2024-08-20T11:00:00Z",
-    updated_at: "2024-08-20T11:00:00Z",
-    nam_tot_nghiep: 2024,
-    tinh_trang_hoc_phi: true,
-    so_tien_hoc_phi: 13200000, // 13.2 triệu VND
-    phuong_thuc_nhap_hoc: "Phương thức 2 - Xét tuyển dựa trên kết quả thi THPT",
+    so_tien_hoc_phi: 11500000,
+    phuong_thuc_nhap_hoc: "ĐKXT dựa trên kết quả thi THPT 2024",
     ho_so_can_thiet: ADMISSION_METHODS[1].documents,
-    trang_thai_duyet: 'approved',
-    nguoi_duyet: "reviewer@gmail.com",
-    ngay_duyet: "2024-08-21T14:00:00Z",
-    khoa: "Khoa Công nghệ Thông tin",
-    nganh: "Trí tuệ nhân tạo"
-  },
-  {
-    id: 5,
-    mssv: "24120004",
-    ho_ten: "Hoàng Minh Elberto",
-    gioi_tinh: "Nam",
-    ngay_sinh: "2006-02-14",
-    cccd: "001206056789",
-    ho_khau: "202 Hai Bà Trưng, Quận 3, TP.HCM",
-    dia_chi_thuong_tru: "202 Hai Bà Trưng, Phường 6, Quận 3, TP.HCM",
-    so_bao_danh: "21120004",
-    truong_thpt: "THPT Nguyễn Thượng Hiền",
-    diem_toan: 9.2,
-    diem_sinh_hoc: null,
-    diem_tieng_anh: 8.8,
-    diem_tong: 26.5,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Khoa học máy tính",
-    ma_nganh: "7480101",
-    ten_nganh: "Khoa học máy tính",
-    doi_tuong_ut: null,
-    khu_vuc_ut: "KV1",
-    sbd: "21120004",
-    created_at: "2024-08-20T12:00:00Z",
-    updated_at: "2024-08-20T12:00:00Z",
-    nam_tot_nghiep: 2024,
-    tinh_trang_hoc_phi: false,
-    so_tien_hoc_phi: 12000000, // 12 triệu VND
-    phuong_thuc_nhap_hoc: "Phương thức 1 - Xét tuyển thẳng và ưu tiên",
-    ho_so_can_thiet: ADMISSION_METHODS[0].documents,
     trang_thai_duyet: 'pending',
-    khoa: "Khoa Công nghệ Thông tin",
-    nganh: "Khoa học máy tính"
+    khoa: "Khoa Sinh học",
+    nganh: "Sinh học",
+
+    // Display fields
+    dia_chi_thuong_tru: "Huyện Bàu Bàng, Bình Dương",
+    diem_toan: 7.8,
+    diem_sinh_hoc: 7.75,
+    diem_tieng_anh: 8.4,
+    diem_tong: 24.15
   }
 ]
 
-// Mock statistics data
-export interface Statistics {
-  dailyApplications: { [key: string]: number }
-  approvedApplications: { [key: string]: number }
-  facultyStats: {
-    [facultyId: string]: {
-      dailyApplications: number
-      totalApproved: number
-      pending: number
-      rejected: number
-    }
-  }
+// Helper functions
+export function getStudentById(id: string): Student | undefined {
+  return MOCK_STUDENTS.find(student => student.mssv === id)
 }
 
-export const MOCK_STATISTICS: Statistics = {
-  dailyApplications: {
-    "2024-08-20": 15,
-    "2024-08-21": 23,
-    "2024-08-22": 18,
-    "2024-08-23": 31,
-    "2024-08-24": 27
-  },
-  approvedApplications: {
-    "2024-08-20": 8,
-    "2024-08-21": 12,
-    "2024-08-22": 15,
-    "2024-08-23": 19,
-    "2024-08-24": 22
-  },
-  facultyStats: {
-    "fit": {
-      dailyApplications: 8,
-      totalApproved: 45,
-      pending: 12,
-      rejected: 3
-    },
-    "math": {
-      dailyApplications: 5,
-      totalApproved: 32,
-      pending: 8,
-      rejected: 2
-    },
-    "physics": {
-      dailyApplications: 6,
-      totalApproved: 28,
-      pending: 10,
-      rejected: 1
-    },
-    "chemistry": {
-      dailyApplications: 4,
-      totalApproved: 24,
-      pending: 6,
-      rejected: 2
-    },
-    "fbb": {
-      dailyApplications: 3,
-      totalApproved: 18,
-      pending: 4,
-      rejected: 1
-    },
-    "environment": {
-      dailyApplications: 2,
-      totalApproved: 15,
-      pending: 3,
-      rejected: 0
-    },
-    "geology": {
-      dailyApplications: 1,
-      totalApproved: 12,
-      pending: 2,
-      rejected: 1
-    },
-    "fetel": {
-      dailyApplications: 2,
-      totalApproved: 16,
-      pending: 5,
-      rejected: 1
-    },
-    "mst": {
-      dailyApplications: 1,
-      totalApproved: 10,
-      pending: 2,
-      rejected: 0
-    },
-    "fis": {
-      dailyApplications: 1,
-      totalApproved: 8,
-      pending: 1,
-      rejected: 0
-    }
-  }
+export function getAllStudents(): Student[] {
+  return MOCK_STUDENTS
+}
+
+export function searchStudents(query: string): Student[] {
+  if (!query) return MOCK_STUDENTS
+
+  const lowercaseQuery = query.toLowerCase()
+
+  return MOCK_STUDENTS.filter(student =>
+    student.mssv.toLowerCase().includes(lowercaseQuery) ||
+    student.ho_ten.toLowerCase().includes(lowercaseQuery) ||
+    student.nganh.toLowerCase().includes(lowercaseQuery) ||
+    student.khoa.toLowerCase().includes(lowercaseQuery)
+  )
 }

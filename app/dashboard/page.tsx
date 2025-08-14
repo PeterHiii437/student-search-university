@@ -11,8 +11,38 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Search, CheckCircle2, Clock, XCircle, TrendingUp, BarChart3, GraduationCap, Keyboard } from "lucide-react"
 import { getCurrentUser, User } from "@/lib/mock-auth"
 import { searchStudentById, getSampleStudentIds, getStudentStatistics } from "@/lib/mock-student-actions"
-import { MOCK_STATISTICS, FACULTIES } from "@/lib/mock-data"
+import { FACULTIES } from "@/lib/mock-data"
 import type { Student } from "@/lib/mock-data"
+
+// Mock statistics data for dashboard
+const MOCK_STATISTICS = {
+  dailyApplications: {
+    "2024-08-20": 15,
+    "2024-08-21": 23,
+    "2024-08-22": 18,
+    "2024-08-23": 31,
+    "2024-08-24": 27
+  } as Record<string, number>,
+  approvedApplications: {
+    "2024-08-20": 8,
+    "2024-08-21": 12,
+    "2024-08-22": 15,
+    "2024-08-23": 19,
+    "2024-08-24": 22
+  } as Record<string, number>,
+  facultyStats: {
+    "fit": { dailyApplications: 8, totalApproved: 45, pending: 12, rejected: 3 },
+    "math": { dailyApplications: 5, totalApproved: 32, pending: 8, rejected: 2 },
+    "physics": { dailyApplications: 6, totalApproved: 28, pending: 10, rejected: 1 },
+    "chemistry": { dailyApplications: 4, totalApproved: 24, pending: 6, rejected: 2 },
+    "fbb": { dailyApplications: 3, totalApproved: 18, pending: 4, rejected: 1 },
+    "environment": { dailyApplications: 2, totalApproved: 15, pending: 3, rejected: 0 },
+    "geology": { dailyApplications: 1, totalApproved: 12, pending: 2, rejected: 1 },
+    "fetel": { dailyApplications: 2, totalApproved: 16, pending: 5, rejected: 1 },
+    "mst": { dailyApplications: 1, totalApproved: 10, pending: 2, rejected: 0 },
+    "fis": { dailyApplications: 1, totalApproved: 8, pending: 1, rejected: 0 }
+  } as Record<string, { dailyApplications: number; totalApproved: number; pending: number; rejected: number }>
+}
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -139,41 +169,33 @@ export default function DashboardPage() {
             <TabsTrigger value="stats">Thống Kê</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="search" className="space-y-2">
-            <div className="grid grid-cols-5 gap-4 h-[calc(100vh-140px)]">
-              {/* Search Panel - Optimized for 12-digit codes */}
-              <div className="col-span-1 space-y-3">
-                <Card className="h-fit">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Search className="h-4 w-4" />
-                      Tìm Kiếm Sinh Viên
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
+          <TabsContent value="search" className="space-y-4">
+            {/* Search Panel - Moved to Top */}
+            <Card>
+              <CardContent className="py-2">
+                <div className="grid grid-cols-12 gap-4 items-start">
+                  {/* Search Input */}
+                  <div className="col-span-3">
                     <Input
                       ref={searchInputRef}
                       value={searchQuery}
                       onChange={(e) => handleSearchInputChange(e.target.value)}
                       placeholder="MSSV/Số báo danh/CCCD"
-                      className="mb-3 text-sm"
+                      className="text-sm h-8"
                       maxLength={12}
                     />
+                  </div>
 
-                    {searchError && (
-                      <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm mb-3">
-                        {searchError}
-                      </div>
-                    )}
-
-                    <div>
-                      <div className="text-sm font-medium mb-2">ID Mẫu để thử ({sampleIds.length}):</div>
-                      <div className="grid grid-cols-1 gap-1 max-h-60 overflow-y-auto">
+                  {/* Sample IDs */}
+                  <div className="col-span-9">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium whitespace-nowrap">ID Mẫu:</span>
+                      <div className="flex flex-wrap gap-1">
                         {sampleIds.map((id) => (
                           <button
                             key={id}
                             onClick={() => handleSampleIdClick(id)}
-                            className={`text-xs p-2 rounded border text-left hover:bg-blue-50 ${selectedSampleId === id ? 'bg-blue-100 border-blue-300' : 'border-gray-200'
+                            className={`text-xs px-2.5 py-1 rounded border hover:bg-blue-50 transition-colors ${selectedSampleId === id ? 'bg-blue-100 border-blue-300 text-blue-700' : 'border-gray-200 text-gray-600'
                               }`}
                           >
                             {id}
@@ -181,26 +203,32 @@ export default function DashboardPage() {
                         ))}
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {searchError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-1.5 rounded text-sm mt-2">
+                    {searchError}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Student Details Panel - Full Width */}
+            <div className="h-[calc(100vh-200px)]">
+              {currentStudent ? (
+                <StudentDetails student={currentStudent} />
+              ) : (
+                <Card className="h-full">
+                  <CardContent className="flex items-center justify-center h-full">
+                    <div className="text-center text-muted-foreground">
+                      <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <h3 className="text-lg font-medium mb-2">Chưa chọn sinh viên</h3>
+                      <p className="text-sm">Nhập MSSV, số báo danh hoặc CCCD để xem thông tin chi tiết</p>
+                    </div>
                   </CardContent>
                 </Card>
-              </div>
-
-              {/* Student Details Panel */}
-              <div className="col-span-4">
-                {currentStudent ? (
-                  <StudentDetails student={currentStudent} />
-                ) : (
-                  <Card className="h-full">
-                    <CardContent className="flex items-center justify-center h-full">
-                      <div className="text-center text-muted-foreground">
-                        <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-medium mb-2">Chưa chọn sinh viên</h3>
-                        <p className="text-sm">Nhập MSSV, số báo danh hoặc CCCD để xem thông tin</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+              )}
             </div>
           </TabsContent>
 
