@@ -26,13 +26,13 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
       {/* Header với ảnh giấy báo trúng tuyển */}
       <Card>
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4">
+          {/* <div className="mx-auto mb-4">
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-tf937OlVmJGWozOCKxZdJ33xeiAuEu.png"
               alt="Giấy báo trúng tuyển"
               className="max-w-full h-auto border rounded-lg shadow-lg"
             />
-          </div>
+          </div> */}
           <CardTitle className="text-2xl text-center">GIẤY BÁO TRÚNG TUYỂN</CardTitle>
           <CardDescription className="text-lg font-medium">
             (Hệ chính quy, khóa tuyển 2024 - Bậc Đại học)
