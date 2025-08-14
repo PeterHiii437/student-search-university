@@ -90,6 +90,11 @@ export function setApprovalStatus(mssv: string, status: 'approved' | 'rejected' 
     }
 
     localStorage.setItem('approvals', JSON.stringify(approvalData))
+
+    // Dispatch custom event for approval status changes
+    window.dispatchEvent(new CustomEvent('approvalStatusChanged', {
+      detail: { mssv, status, approver }
+    }))
   }
 }
 

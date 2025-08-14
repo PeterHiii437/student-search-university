@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { User, Calendar, GraduationCap, MapPin, FileText, Award, BarChart3, CreditCard, CheckCircle2, XCircle, Clock, Mail, Phone } from "lucide-react"
 import type { Student } from "@/lib/mock-data"
-import { setApprovalStatus, getCurrentUser } from "@/lib/mock-auth"
+import { setApprovalStatus, getCurrentUser, getApprovalStatus } from "@/lib/mock-auth"
 
 interface StudentDetailsProps {
   student: Student
@@ -17,6 +17,22 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   const [currentStudent, setCurrentStudent] = useState(student)
   const [checkedDocuments, setCheckedDocuments] = useState<{ [key: string]: boolean }>({})
   const user = getCurrentUser()
+
+  // Update currentStudent when the prop changes or approval status changes
+  useEffect(() => {
+    // Get latest approval status from localStorage
+    const approvalStatus = getApprovalStatus(student.mssv)
+    if (approvalStatus) {
+      setCurrentStudent({
+        ...student,
+        trang_thai_duyet: approvalStatus.status,
+        nguoi_duyet: approvalStatus.approver,
+        ngay_duyet: approvalStatus.timestamp
+      })
+    } else {
+      setCurrentStudent(student)
+    }
+  }, [student])
 
   // Initialize checkboxes with all checked by default and load from localStorage
   useEffect(() => {
@@ -309,18 +325,10 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => handleApproval('approved')}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
+                      className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
                     >
                       <CheckCircle2 className="h-5 w-5 mr-2" />
                       Duyệt
-                    </Button>
-                    <Button
-                      onClick={() => handleApproval('rejected')}
-                      variant="destructive"
-                      className="px-4 py-3 text-sm font-semibold"
-                    >
-                      <XCircle className="h-4 w-4 mr-1" />
-                      Từ chối
                     </Button>
                   </div>
                 ) : currentStudent.trang_thai_duyet === 'approved' ? (
