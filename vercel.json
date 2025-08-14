@@ -1,0 +1,13 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "yarn run build",
+  "outputDirectory": ".next",
+  "installCommand": "yarn install",
+  "devCommand": "yarn run dev",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/dashboard"
+    }
+  ]
+}

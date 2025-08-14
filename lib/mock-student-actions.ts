@@ -3,7 +3,7 @@
 import { Student, MOCK_STUDENTS, SAMPLE_STUDENT_IDS } from './mock-data'
 import { getApprovalStatus } from './mock-auth'
 
-// Search student by MSSV - compatible with useActionState
+// Search student by MSSV, Registration Number, or CCCD - compatible with useActionState
 export async function searchStudent(prevState: any, formData: FormData): Promise<{ success: boolean; student?: Student; error?: string }> {
   if (!formData) {
     return { success: false, error: "Thiếu dữ liệu form" }
@@ -12,14 +12,20 @@ export async function searchStudent(prevState: any, formData: FormData): Promise
   const studentId = formData.get("studentId")
 
   if (!studentId || typeof studentId !== "string" || studentId.trim() === "") {
-    return { success: false, error: "Mã số sinh viên là bắt buộc" }
+    return { success: false, error: "Vui lòng nhập MSSV, Số báo danh hoặc CCCD" }
   }
 
-  // Find student in mock data
-  const student = MOCK_STUDENTS.find(s => s.mssv === studentId.trim())
+  const searchTerm = studentId.trim()
+
+  // Search by MSSV, Registration Number (so_bao_danh), or CCCD
+  const student = MOCK_STUDENTS.find(s =>
+    s.mssv === searchTerm ||
+    s.so_bao_danh === searchTerm ||
+    s.cccd === searchTerm
+  )
 
   if (!student) {
-    return { success: false, error: "Không tìm thấy sinh viên với MSSV: " + studentId }
+    return { success: false, error: `Không tìm thấy sinh viên với: ${searchTerm}` }
   }
 
   // Update approval status from localStorage
@@ -33,17 +39,23 @@ export async function searchStudent(prevState: any, formData: FormData): Promise
   return { success: true, student }
 }
 
-// Simple search function for direct use
-export function searchStudentById(studentId: string): { success: boolean; student?: Student; error?: string } {
-  if (!studentId || studentId.trim() === "") {
-    return { success: false, error: "Mã số sinh viên là bắt buộc" }
+// Simple search function for direct use - supports MSSV, Registration Number, and CCCD
+export function searchStudentById(query: string): { success: boolean; student?: Student; error?: string } {
+  if (!query || query.trim() === "") {
+    return { success: false, error: "Vui lòng nhập MSSV, Số báo danh hoặc CCCD" }
   }
 
-  // Find student in mock data
-  const student = MOCK_STUDENTS.find(s => s.mssv === studentId.trim())
+  const searchTerm = query.trim()
+
+  // Search by MSSV, Registration Number (so_bao_danh), or CCCD
+  const student = MOCK_STUDENTS.find(s =>
+    s.mssv === searchTerm ||
+    s.so_bao_danh === searchTerm ||
+    s.cccd === searchTerm
+  )
 
   if (!student) {
-    return { success: false, error: "Không tìm thấy sinh viên với MSSV: " + studentId }
+    return { success: false, error: `Không tìm thấy sinh viên với: ${searchTerm}` }
   }
 
   // Update approval status from localStorage

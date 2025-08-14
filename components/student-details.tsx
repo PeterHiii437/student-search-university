@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,57 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   const [currentStudent, setCurrentStudent] = useState(student)
   const [checkedDocuments, setCheckedDocuments] = useState<{ [key: string]: boolean }>({})
   const user = getCurrentUser()
+
+  // Initialize checkboxes with all checked by default and load from localStorage
+  useEffect(() => {
+    const savedState = localStorage.getItem(`student-${student.mssv}-checkboxes`)
+
+    if (savedState) {
+      // Load saved state from localStorage
+      const parsedState = JSON.parse(savedState)
+      setCheckedDocuments(parsedState.documents || {})
+
+      // Update fee status if saved
+      if (parsedState.feeStatus !== undefined) {
+        setCurrentStudent(prev => ({
+          ...prev,
+          tinh_trang_hoc_phi: parsedState.feeStatus
+        }))
+      }
+    } else {
+      // Default all checkboxes to checked
+      const initialState: { [key: string]: boolean } = {}
+      student.ho_so_can_thiet.forEach((_, index) => {
+        initialState[index] = true
+      })
+      setCheckedDocuments(initialState)
+
+      // Default fee status to checked if not already set
+      if (!currentStudent.tinh_trang_hoc_phi) {
+        setCurrentStudent(prev => ({
+          ...prev,
+          tinh_trang_hoc_phi: true
+        }))
+      }
+    }
+  }, [student.mssv, student.ho_so_can_thiet])
+
+  // Save to localStorage whenever checkbox states change
+  useEffect(() => {
+    const stateToSave = {
+      documents: checkedDocuments,
+      feeStatus: currentStudent.tinh_trang_hoc_phi
+    }
+    localStorage.setItem(`student-${student.mssv}-checkboxes`, JSON.stringify(stateToSave))
+  }, [checkedDocuments, currentStudent.tinh_trang_hoc_phi, student.mssv])
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(amount)
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Không có"
@@ -42,15 +93,15 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
     }
   }
 
-  const handleApproval = (status: 'approved' | 'rejected') => {
+  const handleApproval = (status: 'approved' | 'rejected' | 'pending') => {
     if (!user) return
 
     setApprovalStatus(currentStudent.mssv, status, user.email)
     setCurrentStudent(prev => ({
       ...prev,
       trang_thai_duyet: status,
-      nguoi_duyet: user.email,
-      ngay_duyet: new Date().toISOString()
+      nguoi_duyet: status === 'pending' ? undefined : user.email,
+      ngay_duyet: status === 'pending' ? undefined : new Date().toISOString()
     }))
   }
 
@@ -118,9 +169,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
             </div>
 
             {/* Middle Column - Documents & Fee */}
-            <div className="col-span-4 space-y-4">
+            <div className="col-span-4 space-y-4 flex flex-col h-full">
               {/* Fee Status */}
-              <div className="space-y-3 text-base">
+              <div className="space-y-3 text-base flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
                   <span className="font-semibold">Học phí</span>
@@ -133,24 +184,24 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     className="h-5 w-5"
                   />
                   <label htmlFor="fee-status" className="text-base font-medium">
-                    Đã đóng học phí
+                    Đã đóng học phí ({formatCurrency(currentStudent.so_tien_hoc_phi)})
                   </label>
                 </div>
               </div>
 
               {/* Documents */}
-              <div className="space-y-3 text-base">
-                <div className="flex items-center gap-2">
+              <div className="space-y-3 text-base flex-grow flex flex-col min-h-0">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                   <span className="font-semibold">Hồ sơ ({currentStudent.ho_so_can_thiet.length})</span>
                 </div>
-                <div className="pl-6 max-h-80 overflow-y-auto">
-                  <div className="space-y-2">
+                <div className="pl-6 flex-grow overflow-y-auto min-h-0">
+                  <div className="space-y-2 pb-2">
                     {currentStudent.ho_so_can_thiet.map((document, index) => (
                       <div key={index} className="flex items-start space-x-3 text-sm">
                         <Checkbox
                           id={`doc-${index}`}
-                          checked={checkedDocuments[index] || false}
+                          checked={checkedDocuments[index] !== undefined ? checkedDocuments[index] : true}
                           onCheckedChange={(checked: boolean) => handleDocumentCheck(index, checked)}
                           className="h-4 w-4 mt-0.5 flex-shrink-0"
                         />
@@ -165,7 +216,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
             </div>
 
             {/* Right Column - Scores & Actions */}
-            <div className="col-span-2 space-y-4 flex flex-col">
+            <div className="col-span-2 space-y-4 flex flex-col h-full">
               {/* Scores */}
               <div className="space-y-3 text-base">
                 <div className="flex items-center gap-2">
@@ -193,7 +244,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex-grow flex flex-col justify-end pt-6">
+              <div className="flex-grow flex flex-col justify-end pt-4">
                 {currentStudent.trang_thai_duyet === 'pending' ? (
                   <div className="space-y-3">
                     <Button
@@ -205,18 +256,31 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     </Button>
                     <Button
                       onClick={() => handleApproval('rejected')}
-                      variant="outline"
-                      className="w-full border-red-600 text-red-600 hover:bg-red-50 py-3 text-base font-semibold"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-base font-semibold"
                     >
                       <XCircle className="h-5 w-5 mr-2" />
                       Từ chối
                     </Button>
                   </div>
-                ) : (
-                  <div className="text-sm text-muted-foreground text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="font-medium">
-                      {currentStudent.trang_thai_duyet === 'approved' ? 'Đã duyệt' : 'Đã từ chối'}
+                ) : currentStudent.trang_thai_duyet === 'approved' ? (
+                  <div className="space-y-3">
+                    <div className="text-sm text-muted-foreground text-center p-3 bg-green-50 rounded-lg">
+                      <div className="font-medium text-green-800">Đã duyệt</div>
+                      <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
+                      <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
                     </div>
+                    <Button
+                      onClick={() => handleApproval('pending')}
+                      variant="outline"
+                      className="w-full border-yellow-600 text-yellow-600 hover:bg-yellow-50 py-3 text-base font-semibold"
+                    >
+                      <Clock className="h-5 w-5 mr-2" />
+                      Hủy duyệt
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground text-center p-4 bg-red-50 rounded-lg">
+                    <div className="font-medium text-red-800">Đã từ chối</div>
                     <div className="mt-1">bởi: {currentStudent.nguoi_duyet}</div>
                     <div className="mt-1">Thời gian: {formatDate(currentStudent.ngay_duyet || null)}</div>
                   </div>

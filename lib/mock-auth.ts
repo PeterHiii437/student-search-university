@@ -65,7 +65,7 @@ export function getApprovalStatus(mssv: string): { status: 'pending' | 'approved
   return null
 }
 
-export function setApprovalStatus(mssv: string, status: 'approved' | 'rejected', approver: string): void {
+export function setApprovalStatus(mssv: string, status: 'approved' | 'rejected' | 'pending', approver: string): void {
   if (typeof window !== 'undefined') {
     const approvals = localStorage.getItem('approvals')
     let approvalData: { [key: string]: { status: string; approver: string; timestamp: string } } = {}
@@ -78,10 +78,15 @@ export function setApprovalStatus(mssv: string, status: 'approved' | 'rejected',
       }
     }
 
-    approvalData[mssv] = {
-      status,
-      approver,
-      timestamp: new Date().toISOString()
+    if (status === 'pending') {
+      // Remove the approval record for pending status
+      delete approvalData[mssv]
+    } else {
+      approvalData[mssv] = {
+        status,
+        approver,
+        timestamp: new Date().toISOString()
+      }
     }
 
     localStorage.setItem('approvals', JSON.stringify(approvalData))

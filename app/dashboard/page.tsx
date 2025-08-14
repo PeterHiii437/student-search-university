@@ -140,8 +140,8 @@ export default function DashboardPage() {
           </TabsList>
 
           <TabsContent value="search" className="space-y-2">
-            <div className="grid grid-cols-4 gap-4 h-[calc(100vh-140px)]">
-              {/* Search Panel - Compact */}
+            <div className="grid grid-cols-5 gap-4 h-[calc(100vh-140px)]">
+              {/* Search Panel - Optimized for 12-digit codes */}
               <div className="col-span-1 space-y-3">
                 <Card className="h-fit">
                   <CardHeader className="pb-2">
@@ -155,8 +155,9 @@ export default function DashboardPage() {
                       ref={searchInputRef}
                       value={searchQuery}
                       onChange={(e) => handleSearchInputChange(e.target.value)}
-                      placeholder="Nhập MSSV (VD: 24120001)"
-                      className="mb-3"
+                      placeholder="MSSV/Số báo danh/CCCD"
+                      className="mb-3 text-sm"
+                      maxLength={12}
                     />
 
                     {searchError && (
@@ -185,7 +186,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Student Details Panel */}
-              <div className="col-span-3">
+              <div className="col-span-4">
                 {currentStudent ? (
                   <StudentDetails student={currentStudent} />
                 ) : (
@@ -194,7 +195,7 @@ export default function DashboardPage() {
                       <div className="text-center text-muted-foreground">
                         <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
                         <h3 className="text-lg font-medium mb-2">Chưa chọn sinh viên</h3>
-                        <p className="text-sm">Nhập MSSV hoặc chọn từ danh sách ID mẫu để xem thông tin</p>
+                        <p className="text-sm">Nhập MSSV, số báo danh hoặc CCCD để xem thông tin</p>
                       </div>
                     </CardContent>
                   </Card>

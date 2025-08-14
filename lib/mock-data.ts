@@ -26,6 +26,7 @@ export interface Student {
   // New fields
   nam_tot_nghiep: number // Graduation year
   tinh_trang_hoc_phi: boolean // Fee payment status
+  so_tien_hoc_phi: number // Tuition fee amount in VND
   phuong_thuc_nhap_hoc: string // Admission method
   ho_so_can_thiet: string[] // Required documents
   trang_thai_duyet: 'pending' | 'approved' | 'rejected' // Approval status
@@ -250,10 +251,7 @@ export const FACULTIES: Faculty[] = [
 
 // Sample student IDs for testing
 export const SAMPLE_STUDENT_IDS = [
-  "24120001", "24120002", "24120003", "24120004", "24120005",
-  "24120006", "24120007", "24120008", "24120009", "24120010",
-  "24130001", "24130002", "24130003", "24140001", "24140002",
-  "24150001", "24150002", "24160001", "24160002", "24170001"
+  "24120001", "24120002", "24120003", "24120004", "24130001"
 ]
 
 // Mock student data
@@ -284,6 +282,7 @@ export const MOCK_STUDENTS: Student[] = [
     updated_at: "2024-08-20T08:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: false,
+    so_tien_hoc_phi: 12500000, // 12.5 triệu VND
     phuong_thuc_nhap_hoc: "Phương thức 2 - Xét tuyển dựa trên kết quả thi THPT",
     ho_so_can_thiet: ADMISSION_METHODS[1].documents,
     trang_thai_duyet: 'pending',
@@ -316,6 +315,7 @@ export const MOCK_STUDENTS: Student[] = [
     updated_at: "2024-08-20T09:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: true,
+    so_tien_hoc_phi: 11800000, // 11.8 triệu VND
     phuong_thuc_nhap_hoc: "Phương thức 1 - Xét tuyển thẳng và ưu tiên",
     ho_so_can_thiet: ADMISSION_METHODS[0].documents,
     trang_thai_duyet: 'approved',
@@ -350,6 +350,7 @@ export const MOCK_STUDENTS: Student[] = [
     updated_at: "2024-08-20T10:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: false,
+    so_tien_hoc_phi: 10500000, // 10.5 triệu VND
     phuong_thuc_nhap_hoc: "Phương thức 3 - Xét tuyển dựa trên học bạ THPT",
     ho_so_can_thiet: ADMISSION_METHODS[2].documents,
     trang_thai_duyet: 'pending',
@@ -382,6 +383,7 @@ export const MOCK_STUDENTS: Student[] = [
     updated_at: "2024-08-20T11:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: true,
+    so_tien_hoc_phi: 13200000, // 13.2 triệu VND
     phuong_thuc_nhap_hoc: "Phương thức 2 - Xét tuyển dựa trên kết quả thi THPT",
     ho_so_can_thiet: ADMISSION_METHODS[1].documents,
     trang_thai_duyet: 'approved',
@@ -416,45 +418,12 @@ export const MOCK_STUDENTS: Student[] = [
     updated_at: "2024-08-20T12:00:00Z",
     nam_tot_nghiep: 2024,
     tinh_trang_hoc_phi: false,
+    so_tien_hoc_phi: 12000000, // 12 triệu VND
     phuong_thuc_nhap_hoc: "Phương thức 1 - Xét tuyển thẳng và ưu tiên",
     ho_so_can_thiet: ADMISSION_METHODS[0].documents,
     trang_thai_duyet: 'pending',
     khoa: "Khoa Công nghệ Thông tin",
     nganh: "Khoa học máy tính"
-  },
-  {
-    id: 6,
-    mssv: "24120005",
-    ho_ten: "Lý Thanh Giang",
-    gioi_tinh: "Nam",
-    ngay_sinh: "2006-11-03",
-    cccd: "001206067890",
-    ho_khau: "303 Lê Văn Sỹ, Quận Phú Nhuận, TP.HCM",
-    dia_chi_thuong_tru: "303 Lê Văn Sỹ, Phường 1, Quận Phú Nhuận, TP.HCM",
-    so_bao_danh: "21120005",
-    truong_thpt: "THPT Phú Nhuận",
-    diem_toan: 7.8,
-    diem_sinh_hoc: 8.0,
-    diem_tieng_anh: 7.5,
-    diem_tong: 23.3,
-    dieu_kien_trung_tuyen: "Đạt",
-    nganh_trung_tuyen: "Công nghệ thông tin",
-    ma_nganh: "7480201",
-    ten_nganh: "Công nghệ thông tin",
-    doi_tuong_ut: "02",
-    khu_vuc_ut: "KV2-NT",
-    sbd: "21120005",
-    created_at: "2024-08-20T13:00:00Z",
-    updated_at: "2024-08-20T13:00:00Z",
-    nam_tot_nghiep: 2024,
-    tinh_trang_hoc_phi: false,
-    phuong_thuc_nhap_hoc: "Phương thức 3 - Xét tuyển dựa trên học bạ THPT",
-    ho_so_can_thiet: ADMISSION_METHODS[2].documents,
-    trang_thai_duyet: 'rejected',
-    nguoi_duyet: "admin@gmail.com",
-    ngay_duyet: "2024-08-21T16:00:00Z",
-    khoa: "Khoa Công nghệ Thông tin",
-    nganh: "Công nghệ thông tin"
   }
 ]
 
