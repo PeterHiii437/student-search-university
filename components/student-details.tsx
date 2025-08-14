@@ -133,10 +133,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
           <div className="mb-4 pb-3 border-b">
             <div className="flex items-start justify-between mb-2">
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-1">{currentStudent.ho_ten}</h2>
-                <div className="text-lg text-muted-foreground font-medium">MSSV: {currentStudent.mssv}</div>
+                <h2 className="text-2xl font-bold mb-1">{currentStudent.mssv} - {currentStudent.ho_ten}</h2>
               </div>
-              <div className="flex flex-col items-end gap-2">
+              <div className="flex flex-row items-end gap-2">
                 <Badge className={getGenderBadge(currentStudent.gioi_tinh)} style={{ fontSize: '16px', padding: '6px 12px' }}>
                   {currentStudent.gioi_tinh}
                 </Badge>
@@ -206,13 +205,13 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                   <span className="font-semibold text-lg text-purple-800">Học tập</span>
                 </div>
                 <div className="space-y-1.5 text-sm">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex justify-between items-start gap-2">
                     <span className="text-muted-foreground font-medium">Khoa:</span>
-                    <span className="font-semibold text-purple-700">{currentStudent.khoa}</span>
+                    <span className="font-semibold text-purple-700 text-right">{currentStudent.khoa}</span>
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex justify-between items-start gap-2">
                     <span className="text-muted-foreground font-medium">Ngành:</span>
-                    <span className="font-semibold">{currentStudent.nganh}</span>
+                    <span className="font-semibold text-right">{currentStudent.nganh}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground font-medium">Năm TN:</span>
@@ -223,18 +222,18 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
 
               <div className="space-y-2">
                 <div className="text-sm">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground font-medium">Trường THPT:</span>
-                    <span className="font-medium leading-tight">{currentStudent.truong_thpt}</span>
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-muted-foreground font-medium whitespace-nowrap">Trường THPT:</span>
+                    <span className="font-medium text-right">{currentStudent.truong_thpt}</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="text-sm">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground font-medium">PT Nhập học:</span>
-                    <span className="font-medium leading-tight text-blue-700">{currentStudent.phuong_thuc_nhap_hoc}</span>
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-muted-foreground font-medium whitespace-nowrap">PT Nhập học:</span>
+                    <span className="font-medium text-blue-700 text-right">{currentStudent.phuong_thuc_nhap_hoc}</span>
                   </div>
                 </div>
               </div>
