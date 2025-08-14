@@ -519,5 +519,3 @@ export const MOCK_STATISTICS: Statistics = {
     }
   }
 }
-  }
-}
