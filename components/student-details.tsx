@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,57 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
   const [currentStudent, setCurrentStudent] = useState(student)
   const [checkedDocuments, setCheckedDocuments] = useState<{ [key: string]: boolean }>({})
   const user = getCurrentUser()
+
+  // Initialize checkboxes with all checked by default and load from localStorage
+  useEffect(() => {
+    const savedState = localStorage.getItem(`student-${student.mssv}-checkboxes`)
+
+    if (savedState) {
+      // Load saved state from localStorage
+      const parsedState = JSON.parse(savedState)
+      setCheckedDocuments(parsedState.documents || {})
+
+      // Update fee status if saved
+      if (parsedState.feeStatus !== undefined) {
+        setCurrentStudent(prev => ({
+          ...prev,
+          tinh_trang_hoc_phi: parsedState.feeStatus
+        }))
+      }
+    } else {
+      // Default all checkboxes to checked
+      const initialState: { [key: string]: boolean } = {}
+      student.ho_so_can_thiet.forEach((_, index) => {
+        initialState[index] = true
+      })
+      setCheckedDocuments(initialState)
+
+      // Default fee status to checked if not already set
+      if (!currentStudent.tinh_trang_hoc_phi) {
+        setCurrentStudent(prev => ({
+          ...prev,
+          tinh_trang_hoc_phi: true
+        }))
+      }
+    }
+  }, [student.mssv, student.ho_so_can_thiet])
+
+  // Save to localStorage whenever checkbox states change
+  useEffect(() => {
+    const stateToSave = {
+      documents: checkedDocuments,
+      feeStatus: currentStudent.tinh_trang_hoc_phi
+    }
+    localStorage.setItem(`student-${student.mssv}-checkboxes`, JSON.stringify(stateToSave))
+  }, [checkedDocuments, currentStudent.tinh_trang_hoc_phi, student.mssv])
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(amount)
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Không có"
@@ -133,7 +184,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     className="h-5 w-5"
                   />
                   <label htmlFor="fee-status" className="text-base font-medium">
-                    Đã đóng học phí
+                    Đã đóng học phí ({formatCurrency(currentStudent.so_tien_hoc_phi)})
                   </label>
                 </div>
               </div>
@@ -150,7 +201,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       <div key={index} className="flex items-start space-x-3 text-sm">
                         <Checkbox
                           id={`doc-${index}`}
-                          checked={checkedDocuments[index] || false}
+                          checked={checkedDocuments[index] !== undefined ? checkedDocuments[index] : true}
                           onCheckedChange={(checked: boolean) => handleDocumentCheck(index, checked)}
                           className="h-4 w-4 mt-0.5 flex-shrink-0"
                         />
