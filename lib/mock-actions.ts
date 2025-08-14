@@ -3,7 +3,7 @@
 import { signIn as mockSignIn } from './mock-auth'
 
 // Mock sign in function
-export async function signIn(prevState: any, formData: FormData) {
+export async function signIn(_prevState: unknown, formData: FormData) {
   // Check if formData is valid
   if (!formData) {
     return { error: "Form data is missing" }
@@ -32,6 +32,6 @@ export async function signIn(prevState: any, formData: FormData) {
 }
 
 // Mock sign up function (for demo - always fails since we only have admin account)
-export async function signUp(prevState: any, formData: FormData) {
+export async function signUp(_prevState: unknown, _formData: FormData) {
   return { error: "Chỉ tài khoản admin được phép sử dụng hệ thống demo này" }
 }

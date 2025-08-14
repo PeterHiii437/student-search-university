@@ -49,8 +49,14 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null)
   const [searchError, setSearchError] = useState<string | null>(null)
-  const [sampleIds] = useState(getSampleStudentIds())
-  const [stats, setStats] = useState(getStudentStatistics())
+  const [sampleIds, setSampleIds] = useState<string[]>([])
+  const [stats, setStats] = useState<{ total: number; approved: number; pending: number; rejected: number; todayApplications: number }>({
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0,
+    todayApplications: 0,
+  })
   const [selectedSampleId, setSelectedSampleId] = useState<string | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -63,9 +69,13 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
+    // Load initial data
+    getSampleStudentIds().then(setSampleIds)
+    getStudentStatistics().then(setStats)
+
     // Update stats periodically for demo
     const interval = setInterval(() => {
-      setStats(getStudentStatistics())
+      getStudentStatistics().then(setStats)
     }, 30000)
 
     // Listen for approval status changes to refresh current student
@@ -73,10 +83,11 @@ export default function DashboardPage() {
       const { mssv } = e.detail
       if (currentStudent && currentStudent.mssv === mssv) {
         // Refresh the current student data
-        const result = searchStudentById(currentStudent.mssv)
-        if (result.success && result.student) {
-          setCurrentStudent(result.student)
-        }
+        searchStudentById(currentStudent.mssv).then((result) => {
+          if (result.success && result.student) {
+            setCurrentStudent(result.student)
+          }
+        })
       }
     }
 
@@ -99,7 +110,7 @@ export default function DashboardPage() {
 
       // Enter to search when focused
       if (event.key === 'Enter' && document.activeElement === searchInputRef.current) {
-        handleSearch(searchQuery)
+        void handleSearch(searchQuery)
       }
 
       // Escape to clear search
@@ -115,14 +126,14 @@ export default function DashboardPage() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [searchQuery])
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     if (!query.trim()) {
       setCurrentStudent(null)
       setSearchError(null)
       return
     }
 
-    const result = searchStudentById(query.trim())
+    const result = await searchStudentById(query.trim())
 
     if (result.success && result.student) {
       setCurrentStudent(result.student)
@@ -139,7 +150,7 @@ export default function DashboardPage() {
     // Real-time search
     setTimeout(() => {
       if (value.trim()) {
-        handleSearch(value)
+        void handleSearch(value)
       } else {
         setCurrentStudent(null)
         setSearchError(null)
@@ -150,7 +161,7 @@ export default function DashboardPage() {
   const handleSampleIdClick = (id: string) => {
     setSelectedSampleId(id)
     setSearchQuery(id)
-    handleSearch(id)
+    void handleSearch(id)
   }
 
   if (!user) {

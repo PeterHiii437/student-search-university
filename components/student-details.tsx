@@ -238,6 +238,18 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.so_bao_danh}
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">
+                      Khu vực:
+                    </span>
+                    <span className="font-semibold">{currentStudent.kv}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">
+                      Đối tượng:
+                    </span>
+                    <span className="font-semibold">{currentStudent.dt}</span>
+                  </div>
                 </div>
               </div>
 
