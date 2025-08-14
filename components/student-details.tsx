@@ -238,6 +238,18 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.so_bao_danh}
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">
+                      Khu vực:
+                    </span>
+                    <span className="font-semibold">{currentStudent.kv}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground font-medium">
+                      Đối tượng:
+                    </span>
+                    <span className="font-semibold">{currentStudent.dt}</span>
+                  </div>
                 </div>
               </div>
 
@@ -295,26 +307,10 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                 <div className="space-y-1.5 text-sm">
                   <div className="flex justify-between items-start gap-2">
                     <span className="text-muted-foreground font-medium">
-                      Khoa:
+                      Ngành học:
                     </span>
                     <span className="font-semibold text-purple-700 text-right">
-                      {currentStudent.khoa}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-start gap-2">
-                    <span className="text-muted-foreground font-medium">
-                      Ngành:
-                    </span>
-                    <span className="font-semibold text-right">
-                      {currentStudent.nganh}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground font-medium">
-                      Năm TN:
-                    </span>
-                    <span className="font-semibold">
-                      {currentStudent.nam_tot_nghiep}
+                      {currentStudent.ma_nganh} - {currentStudent.ten_nganh}
                     </span>
                   </div>
                 </div>
@@ -414,11 +410,6 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                   <span className="font-semibold text-lg text-green-800">
                     Học phí
                   </span>
-                </div>
-                <div className="text-center p-3 bg-green-50 rounded-lg border">
-                  <div className="text-lg font-bold text-green-600">
-                    {formatCurrency(currentStudent.so_tien_hoc_phi)}
-                  </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
