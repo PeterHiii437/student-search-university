@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { GraduationCap, Users, Search, Shield } from "lucide-react"
 import Link from "next/link"
-
+//
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
