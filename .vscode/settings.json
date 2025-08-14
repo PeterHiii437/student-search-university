@@ -1,0 +1,34 @@
+{
+  "chat.editor.fontSize": 16,
+  "chat.edits2.enabled": true,
+  "chat.tools.autoApprove": true,
+  "inlineChat.enableV2": true,
+  "chat.agent.maxRequests": 100000,
+  "chat.agent.enabled": true,
+  "chat.renderRelatedFiles": true,
+  "chat.editing.autoAcceptDelay": 5,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/**.jpg": true
+  },
+  "editor.insertSpaces": true,
+  "extensions.ignoreRecommendations": true,
+  "workbench.startupEditor": "none",
+  "github.copilot.chat.terminalChatLocation": "terminal",
+  "docker.showStartPage": false,
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+  "python-envs.pythonProjects": [],
+  "files.saveConflictResolution": "overwriteFileOnDisk",
+  "python.terminal.activateEnvironment": false,
+  "python.analysis.extraPaths": [
+    "./base/src"
+  ]
+}
