@@ -118,9 +118,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
             </div>
 
             {/* Middle Column - Documents & Fee */}
-            <div className="col-span-4 space-y-4">
+            <div className="col-span-4 space-y-4 flex flex-col h-full">
               {/* Fee Status */}
-              <div className="space-y-3 text-base">
+              <div className="space-y-3 text-base flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
                   <span className="font-semibold">Học phí</span>
@@ -139,13 +139,13 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
               </div>
 
               {/* Documents */}
-              <div className="space-y-3 text-base">
-                <div className="flex items-center gap-2">
+              <div className="space-y-3 text-base flex-grow flex flex-col min-h-0">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                   <span className="font-semibold">Hồ sơ ({currentStudent.ho_so_can_thiet.length})</span>
                 </div>
-                <div className="pl-6 max-h-80 overflow-y-auto">
-                  <div className="space-y-2">
+                <div className="pl-6 flex-grow overflow-y-auto min-h-0">
+                  <div className="space-y-2 pb-2">
                     {currentStudent.ho_so_can_thiet.map((document, index) => (
                       <div key={index} className="flex items-start space-x-3 text-sm">
                         <Checkbox
@@ -165,7 +165,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
             </div>
 
             {/* Right Column - Scores & Actions */}
-            <div className="col-span-2 space-y-4 flex flex-col">
+            <div className="col-span-2 space-y-4 flex flex-col h-full">
               {/* Scores */}
               <div className="space-y-3 text-base">
                 <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex-grow flex flex-col justify-end pt-6">
+              <div className="flex-grow flex flex-col justify-end pt-4">
                 {currentStudent.trang_thai_duyet === 'pending' ? (
                   <div className="space-y-3">
                     <Button
