@@ -114,29 +114,24 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader userEmail={user?.email || ""} />
 
-      <main className="container mx-auto px-4 py-6">
-        {/* Usage Guide - Single Row */}
-        <Card className="mb-4">
-          <CardContent className="py-3">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <Keyboard className="h-3 w-3" />
-                  <span className="font-medium">Phím tắt:</span>
-                </div>
-                <Badge variant="outline">Ctrl + /</Badge>
-                <span>Tìm kiếm</span>
-                <Badge variant="outline">Enter</Badge>
-                <span>Xác nhận</span>
-                <Badge variant="outline">Esc</Badge>
-                <span>Xóa</span>
-              </div>
-              <div className="text-muted-foreground">
-                Gõ trực tiếp để tìm kiếm • {sampleIds.length} ID mẫu có sẵn
-              </div>
+      <main className="container mx-auto px-4 py-2">
+        {/* Usage Guide - Compact */}
+        <div className="mb-2 px-3 py-2 bg-blue-50 rounded-lg">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-3">
+              <Keyboard className="h-3 w-3" />
+              <Badge variant="outline" className="text-xs py-0">Ctrl+/</Badge>
+              <span>Tìm kiếm</span>
+              <Badge variant="outline" className="text-xs py-0">Enter</Badge>
+              <span>Xác nhận</span>
+              <Badge variant="outline" className="text-xs py-0">Esc</Badge>
+              <span>Xóa</span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="text-muted-foreground">
+              {sampleIds.length} ID mẫu có sẵn
+            </div>
+          </div>
+        </div>
 
         <Tabs defaultValue="search" className="space-y-4">
           <TabsList className="grid w-full grid-cols-2">
@@ -144,13 +139,13 @@ export default function DashboardPage() {
             <TabsTrigger value="stats">Thống Kê</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="search" className="space-y-4">
-            <div className="grid lg:grid-cols-3 gap-4 h-[calc(100vh-200px)]">
+          <TabsContent value="search" className="space-y-2">
+            <div className="grid grid-cols-4 gap-4 h-[calc(100vh-140px)]">
               {/* Search Panel - Compact */}
-              <div className="lg:col-span-1 space-y-4">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
+              <div className="col-span-1 space-y-3">
+                <Card className="h-fit">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex items-center gap-2">
                       <Search className="h-4 w-4" />
                       Tìm Kiếm Sinh Viên
                     </CardTitle>
@@ -172,12 +167,12 @@ export default function DashboardPage() {
 
                     <div>
                       <div className="text-sm font-medium mb-2">ID Mẫu để thử ({sampleIds.length}):</div>
-                      <div className="grid grid-cols-2 gap-1 max-h-32 overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1 max-h-60 overflow-y-auto">
                         {sampleIds.map((id) => (
                           <button
                             key={id}
                             onClick={() => handleSampleIdClick(id)}
-                            className={`text-xs p-1.5 rounded border text-left hover:bg-blue-50 ${selectedSampleId === id ? 'bg-blue-100 border-blue-300' : 'border-gray-200'
+                            className={`text-xs p-2 rounded border text-left hover:bg-blue-50 ${selectedSampleId === id ? 'bg-blue-100 border-blue-300' : 'border-gray-200'
                               }`}
                           >
                             {id}
@@ -187,37 +182,10 @@ export default function DashboardPage() {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Quick Stats */}
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Tổng Quan</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span>Hôm nay:</span>
-                        <span className="font-medium">{stats.todayApplications} hồ sơ</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Chờ duyệt:</span>
-                        <span className="font-medium text-yellow-600">{stats.pending}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Đã duyệt:</span>
-                        <span className="font-medium text-green-600">{stats.approved}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Từ chối:</span>
-                        <span className="font-medium text-red-600">{stats.rejected}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
 
               {/* Student Details Panel */}
-              <div className="lg:col-span-2">
+              <div className="col-span-3">
                 {currentStudent ? (
                   <StudentDetails student={currentStudent} />
                 ) : (
