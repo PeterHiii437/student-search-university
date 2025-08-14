@@ -254,6 +254,13 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       <CheckCircle2 className="h-5 w-5 mr-2" />
                       Duyệt
                     </Button>
+                    <Button
+                      onClick={() => handleApproval('rejected')}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-base font-semibold"
+                    >
+                      <XCircle className="h-5 w-5 mr-2" />
+                      Từ chối
+                    </Button>
                   </div>
                 ) : currentStudent.trang_thai_duyet === 'approved' ? (
                   <div className="space-y-3">
