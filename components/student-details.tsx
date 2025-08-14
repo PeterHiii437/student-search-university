@@ -205,7 +205,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
           </div>
 
           {/* Main Content Grid - 4 columns for maximum info */}
-          <div className="grid grid-cols-12 gap-4 h-[calc(100%-140px)]">
+          <div className="grid grid-cols-12 gap-4">
             {/* Column 1: Personal Info (4 cols) */}
             <div className="col-span-4 space-y-3">
               <div className="space-y-2">
@@ -420,31 +420,29 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     {formatCurrency(currentStudent.so_tien_hoc_phi)}
                   </div>
                 </div>
-                {currentStudent.trang_thai_duyet !== "approved" && (
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="fee-status"
-                      checked={currentStudent.tinh_trang_hoc_phi}
-                      onCheckedChange={handleFeeStatusChange}
-                      className="h-4 w-4"
-                      disabled={
-                        currentStudent.trang_thai_duyet ===
-                        ("approved" as "approved" | "rejected" | "pending")
-                      }
-                    />
-                    <label
-                      htmlFor="fee-status"
-                      className={`text-sm font-medium ${
-                        currentStudent.trang_thai_duyet ===
-                        ("approved" as "approved" | "rejected" | "pending")
-                          ? "text-muted-foreground"
-                          : "text-green-700"
-                      }`}
-                    >
-                      Đã đóng học phí
-                    </label>
-                  </div>
-                )}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="fee-status"
+                    checked={currentStudent.tinh_trang_hoc_phi}
+                    onCheckedChange={handleFeeStatusChange}
+                    className="h-4 w-4"
+                    disabled={
+                      currentStudent.trang_thai_duyet ===
+                      ("approved" as "approved" | "rejected" | "pending")
+                    }
+                  />
+                  <label
+                    htmlFor="fee-status"
+                    className={`text-sm font-medium ${
+                      currentStudent.trang_thai_duyet ===
+                      ("approved" as "approved" | "rejected" | "pending")
+                        ? "text-muted-foreground"
+                        : "text-green-700"
+                    }`}
+                  >
+                    Đã đóng học phí
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -517,7 +515,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     Hồ sơ ({currentStudent.ho_so_can_thiet.length})
                   </span>
                 </div>
-                <div className="space-y-1 max-h-64 overflow-y-auto">
+                <div className="space-y-1 overflow-y-auto">
                   {currentStudent.ho_so_can_thiet.map((document, index) => (
                     <div
                       key={index}
