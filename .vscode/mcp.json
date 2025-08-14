@@ -1,0 +1,15 @@
+{
+  "inputs": [],
+  "servers": {
+    "serena": {
+      "command": "C:\\Users\\thanh\\.local\\bin\\uv.exe",
+      "args": [
+        "run",
+        "--directory",
+        "D:\\Github\\serena",
+        "serena-mcp-server",
+        "D:\\Github\\student-search-university"
+      ],
+    }
+  }
+}

@@ -1,0 +1,44 @@
+# Project configuration for Serena
+# This file is auto-generated but can be manually edited
+
+# Project name (used for identification)
+name: student-search-university
+
+# Primary programming language for this project
+language: typescript
+
+# Additional languages used in the project
+additional_languages:
+  - javascript
+  - css
+
+# Project type/framework
+framework: nextjs
+
+# Enable/disable specific tools or features
+tools:
+  # Language server tools
+  typescript_language_server: true
+  eslint: true
+  
+# Exclude certain directories from analysis
+exclude_paths:
+  - node_modules/
+  - .next/
+  - .git/
+  - dist/
+  - build/
+
+# Include patterns for relevant files
+include_patterns:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.json"
+  - "**/*.md"
+  - "**/*.css"
+
+# Memory settings
+enable_memory: true
+memory_retention_days: 30

@@ -1,31 +1,12 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
 import LoginForm from "@/components/login-form"
 
-export default async function LoginPage() {
-	// If Supabase is not configured, show setup message directly
-	if (!isSupabaseConfigured) {
-		return (
-			<div className="flex min-h-screen items-center justify-center">
-				<h1 className="text-2xl font-bold mb-4">Kết nối Supabase để bắt đầu</h1>
-			</div>
-		)
-	}
+export default function LoginPage() {
+  // For demo purposes, we'll just show the login form
+  // Authentication is handled by mock system
 
-	// Check if user is already logged in
-	const supabase = createClient()
-	const {
-		data: { session },
-	} = await supabase.auth.getSession()
-
-	// If user is logged in, redirect to dashboard
-	if (session) {
-		redirect("/dashboard")
-	}
-
-	return (
-		<div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-			<LoginForm />
-		</div>
-	)
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <LoginForm />
+    </div>
+  )
 }
