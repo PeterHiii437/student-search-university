@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, Search } from "lucide-react"
-import { searchStudent } from "@/lib/student-actions"
+import { searchStudent } from "@/lib/mock-student-actions"
 import StudentDetails from "./student-details"
 
 function SearchButton() {

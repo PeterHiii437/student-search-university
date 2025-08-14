@@ -1,13 +1,23 @@
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { User, Calendar, GraduationCap, MapPin, FileText, Award, BarChart3 } from "lucide-react"
-import type { Student } from "@/lib/student-actions"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { User, Calendar, GraduationCap, MapPin, FileText, Award, BarChart3, CreditCard, CheckCircle2, XCircle, Clock } from "lucide-react"
+import type { Student } from "@/lib/mock-data"
+import { setApprovalStatus, getCurrentUser } from "@/lib/mock-auth"
 
 interface StudentDetailsProps {
   student: Student
 }
 
 export default function StudentDetails({ student }: StudentDetailsProps) {
+  const [currentStudent, setCurrentStudent] = useState(student)
+  const [checkedDocuments, setCheckedDocuments] = useState<{ [key: string]: boolean }>({})
+  const user = getCurrentUser()
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Không có"
     return new Date(dateString).toLocaleDateString("vi-VN", {
@@ -21,142 +31,204 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
     return gender === "Nam" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
   }
 
+  const getApprovalBadge = (status: 'pending' | 'approved' | 'rejected') => {
+    switch (status) {
+      case 'approved':
+        return <Badge className="bg-green-100 text-green-800 flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Đã duyệt</Badge>
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-800 flex items-center gap-1"><XCircle className="h-3 w-3" /> Từ chối</Badge>
+      default:
+        return <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1"><Clock className="h-3 w-3" /> Chờ duyệt</Badge>
+    }
+  }
+
+  const handleApproval = (status: 'approved' | 'rejected') => {
+    if (!user) return
+
+    setApprovalStatus(currentStudent.mssv, status, user.email)
+    setCurrentStudent(prev => ({
+      ...prev,
+      trang_thai_duyet: status,
+      nguoi_duyet: user.email,
+      ngay_duyet: new Date().toISOString()
+    }))
+  }
+
+  const handleDocumentCheck = (documentIndex: number, checked: boolean) => {
+    setCheckedDocuments(prev => ({
+      ...prev,
+      [documentIndex]: checked
+    }))
+  }
+
+  const handleFeeStatusChange = (checked: boolean) => {
+    setCurrentStudent(prev => ({
+      ...prev,
+      tinh_trang_hoc_phi: checked
+    }))
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header với ảnh giấy báo trúng tuyển */}
+    <div className="space-y-4 max-h-screen overflow-y-auto">
+      {/* Header với thông tin chính - thu nhỏ */}
       <Card>
-        <CardHeader className="text-center">
-          {/* <div className="mx-auto mb-4">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-tf937OlVmJGWozOCKxZdJ33xeiAuEu.png"
-              alt="Giấy báo trúng tuyển"
-              className="max-w-full h-auto border rounded-lg shadow-lg"
-            />
-          </div> */}
-          <CardTitle className="text-2xl text-center">GIẤY BÁO TRÚNG TUYỂN</CardTitle>
-          <CardDescription className="text-lg font-medium">
-            (Hệ chính quy, khóa tuyển 2024 - Bậc Đại học)
-          </CardDescription>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">{currentStudent.ho_ten}</CardTitle>
+              <CardDescription className="text-base font-medium">MSSV: {currentStudent.mssv}</CardDescription>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <Badge className={getGenderBadge(currentStudent.gioi_tinh)}>{currentStudent.gioi_tinh}</Badge>
+              {getApprovalBadge(currentStudent.trang_thai_duyet)}
+            </div>
+          </div>
         </CardHeader>
       </Card>
 
-      {/* Thông tin sinh viên */}
+      {/* Thông tin cơ bản - thu nhỏ */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">{student.ho_ten}</CardTitle>
-              <CardDescription className="text-lg font-medium">MSSV: {student.mssv}</CardDescription>
-            </div>
-            <Badge className={getGenderBadge(student.gioi_tinh)}>{student.gioi_tinh}</Badge>
-          </div>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Thông Tin Cơ Bản
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Thông tin cá nhân */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Thông Tin Cá Nhân
-            </h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Ngày sinh:</span>
-                <span>{formatDate(student.ngay_sinh)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">CCCD:</span>
-                <span>{student.cccd}</span>
-              </div>
-              <div className="flex items-start gap-2 md:col-span-2">
-                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span className="text-sm text-muted-foreground">Hộ khẩu:</span>
-                <span className="flex-1">{student.ho_khau}</span>
-              </div>
-              <div className="flex items-start gap-2 md:col-span-2">
-                <GraduationCap className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span className="text-sm text-muted-foreground">Trường:</span>
-                <span className="flex-1">{student.truong_thpt}</span>
-              </div>
-            </div>
+        <CardContent className="pt-2">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div><span className="text-muted-foreground">Ngày sinh:</span> {formatDate(currentStudent.ngay_sinh)}</div>
+            <div><span className="text-muted-foreground">CCCD:</span> {currentStudent.cccd}</div>
+            <div><span className="text-muted-foreground">Năm TN:</span> {currentStudent.nam_tot_nghiep}</div>
+            <div><span className="text-muted-foreground">Trường:</span> {currentStudent.truong_thpt}</div>
+            <div className="col-span-2"><span className="text-muted-foreground">Khoa:</span> {currentStudent.khoa}</div>
+            <div className="col-span-2"><span className="text-muted-foreground">Ngành:</span> {currentStudent.nganh}</div>
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Điểm thi */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Điểm Thi
-            </h3>
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">{student.diem_toan}</div>
-                <div className="text-sm text-muted-foreground">Toán</div>
-              </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">{student.diem_sinh_hoc}</div>
-                <div className="text-sm text-muted-foreground">Sinh học</div>
-              </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">{student.diem_tieng_anh}</div>
-                <div className="text-sm text-muted-foreground">Tiếng Anh</div>
-              </div>
-              <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">{student.diem_tong}</div>
-                <div className="text-sm text-muted-foreground">Điểm tổng</div>
-              </div>
-            </div>
+      {/* Học phí */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <CreditCard className="h-4 w-4" />
+            Tình Trạng Học Phí
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="fee-status"
+              checked={currentStudent.tinh_trang_hoc_phi}
+              onCheckedChange={handleFeeStatusChange}
+            />
+            <label htmlFor="fee-status" className="text-sm font-medium">
+              Đã đóng học phí
+            </label>
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Thông tin trúng tuyển */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              Thông Tin Trúng Tuyển
-            </h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <span className="text-sm text-muted-foreground">Điều kiện trúng tuyển:</span>
-                <p className="font-medium">{student.dieu_kien_trung_tuyen}</p>
+      {/* Phương thức nhập học */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Phương Thức Nhập Học
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <div className="text-sm font-medium mb-2">{currentStudent.phuong_thuc_nhap_hoc}</div>
+        </CardContent>
+      </Card>
+
+      {/* Hồ sơ cần thiết */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4" />
+            Hồ Sơ Cần Thiết ({currentStudent.ho_so_can_thiet.length} tài liệu)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {currentStudent.ho_so_can_thiet.map((document, index) => (
+              <div key={index} className="flex items-start space-x-2 text-sm">
+                <Checkbox
+                  id={`doc-${index}`}
+                  checked={checkedDocuments[index] || false}
+                  onCheckedChange={(checked: boolean) => handleDocumentCheck(index, checked)}
+                />
+                <label htmlFor={`doc-${index}`} className="flex-1 leading-relaxed">
+                  {document}
+                </label>
               </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Trúng tuyển nhờ UT:</span>
-                <p className="font-medium">{student.doi_tuong_ut || "Không"}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Mã ngành:</span>
-                <p className="font-medium">{student.ma_nganh}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Tên ngành:</span>
-                <p className="font-medium">{student.ten_nganh}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Khu vực UT:</span>
-                <p className="font-medium">{student.khu_vuc_ut}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Số báo danh:</span>
-                <p className="font-medium">{student.sbd}</p>
-              </div>
-            </div>
+            ))}
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Thông tin hệ thống */}
-          <div className="pt-4 border-t">
-            <div className="grid md:grid-cols-2 gap-4 text-sm text-muted-foreground">
-              <div>
-                <span>Ngày tạo hồ sơ:</span>
-                <p>{formatDate(student.created_at)}</p>
-              </div>
-              <div>
-                <span>Cập nhật lần cuối:</span>
-                <p>{formatDate(student.updated_at)}</p>
-              </div>
+      {/* Điểm thi - thu nhỏ */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            Điểm Thi
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2">
+          <div className="grid grid-cols-4 gap-2">
+            <div className="text-center p-2 bg-blue-50 rounded">
+              <div className="text-lg font-bold text-blue-600">{currentStudent.diem_toan || '-'}</div>
+              <div className="text-xs text-muted-foreground">Toán</div>
+            </div>
+            <div className="text-center p-2 bg-green-50 rounded">
+              <div className="text-lg font-bold text-green-600">{currentStudent.diem_sinh_hoc || '-'}</div>
+              <div className="text-xs text-muted-foreground">Sinh</div>
+            </div>
+            <div className="text-center p-2 bg-purple-50 rounded">
+              <div className="text-lg font-bold text-purple-600">{currentStudent.diem_tieng_anh || '-'}</div>
+              <div className="text-xs text-muted-foreground">Anh</div>
+            </div>
+            <div className="text-center p-2 bg-orange-50 rounded">
+              <div className="text-lg font-bold text-orange-600">{currentStudent.diem_tong || '-'}</div>
+              <div className="text-xs text-muted-foreground">Tổng</div>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Nút duyệt */}
+      {currentStudent.trang_thai_duyet === 'pending' && (
+        <div className="flex gap-2">
+          <Button
+            onClick={() => handleApproval('approved')}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+          >
+            <CheckCircle2 className="h-4 w-4 mr-1" />
+            Duyệt
+          </Button>
+          <Button
+            onClick={() => handleApproval('rejected')}
+            variant="outline"
+            className="flex-1 border-red-600 text-red-600 hover:bg-red-50"
+          >
+            <XCircle className="h-4 w-4 mr-1" />
+            Từ chối
+          </Button>
+        </div>
+      )}
+
+      {currentStudent.trang_thai_duyet !== 'pending' && (
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-sm text-muted-foreground text-center">
+              {currentStudent.trang_thai_duyet === 'approved' ? 'Đã duyệt' : 'Đã từ chối'} bởi: {currentStudent.nguoi_duyet}
+              <br />
+              Thời gian: {formatDate(currentStudent.ngay_duyet || null)}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
