@@ -1,9 +1,9 @@
 {
   "framework": "nextjs",
-  "buildCommand": "pnpm run build",
+  "buildCommand": "yarn run build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install",
-  "devCommand": "pnpm run dev",
+  "installCommand": "yarn install",
+  "devCommand": "yarn run dev",
   "rewrites": [
     {
       "source": "/",
