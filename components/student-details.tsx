@@ -472,7 +472,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50 py-2 text-sm"
                     >
                       <Clock className="h-4 w-4 mr-1" />
-                      Hủy tiếp nhận
+                      Chỉnh sửa
                     </Button>
                   </div>
                 ) : (

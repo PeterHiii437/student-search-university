@@ -190,14 +190,14 @@ export default function DashboardPage() {
                       ref={searchInputRef}
                       value={searchQuery}
                       onChange={(e) => handleSearchInputChange(e.target.value)}
-                      placeholder="MSSV/Số báo danh/CCCD"
+                      placeholder="MSSV"
                       className="text-sm h-8"
                       maxLength={12}
                     />
                   </div>
 
                   {/* Sample IDs */}
-                  <div className="col-span-9">
+                  {/* <div className="col-span-9">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium whitespace-nowrap">ID Mẫu:</span>
                       <div className="flex flex-wrap gap-1">
@@ -213,7 +213,7 @@ export default function DashboardPage() {
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {searchError && (
