@@ -19,6 +19,7 @@ export interface Student {
   diem_tt: number | null; // Diem_TT - Total score
   kv: string; // KV - Khu vực
   dt: string; // DT - Đối tượng
+  tt_uutien: string;
 
   // System functionality fields (mock data)
   created_at: string;
@@ -225,4 +226,3 @@ export const FACULTIES: Faculty[] = [
     majors: ["Công nghệ giáo dục"],
   },
 ];
-

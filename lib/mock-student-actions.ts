@@ -28,12 +28,14 @@ async function loadStudents(): Promise<Student[]> {
     const record = recordd as unknown as Record<string, string>;
     const total = record["Diem_TT"] ? parseFloat(record["Diem_TT"]) : null;
 
+    console.log(record["DM1"]);
+
     const student: Student = {
       id: idx + 1,
       mssv: record["MaSV"],
       ho_ten: record["HoTen"],
       gioi_tinh: record["Phai"],
-      ngay_sinh: parseDateString(record["NgaySinh"]),
+      ngay_sinh: record["NgaySinh"],
       cccd: record["CMND"],
       email: record["Email"],
       dien_thoai: record["DienThoai"],
@@ -54,16 +56,16 @@ async function loadStudents(): Promise<Student[]> {
       nam_tot_nghiep: 2024,
       tinh_trang_hoc_phi: false,
       so_tien_hoc_phi: 0,
-      phuong_thuc_nhap_hoc: "",
-      ho_so_can_thiet:
-        ADMISSION_METHODS[idx % ADMISSION_METHODS.length].documents,
+      phuong_thuc_nhap_hoc: record["DTT"],
+      ho_so_can_thiet: ADMISSION_METHODS[0].documents,
       trang_thai_duyet: "pending",
       khoa: record["TenNganh"],
       nganh: record["TenNganh"] || "",
       dia_chi_thuong_tru: record["HoKhau"],
-      diem_toan: null,
-      diem_sinh_hoc: null,
-      diem_tieng_anh: null,
+      diem_toan: record["DM1"] ? parseFloat(record["DM1"]) : null,
+      diem_sinh_hoc: record["DM2"] ? parseFloat(record["DM2"]) : null,
+      diem_tieng_anh: record["DM3"] ? parseFloat(record["DM3"]) : null,
+      tt_uutien: record["TT_UuTien"],
       diem_tong: total,
     };
     return student;

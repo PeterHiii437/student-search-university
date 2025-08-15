@@ -102,14 +102,6 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
     );
   }, [checkedDocuments, currentStudent.tinh_trang_hoc_phi, student.mssv]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Không có";
     return new Date(dateString).toLocaleDateString("vi-VN", {
@@ -221,7 +213,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       Ngày sinh:
                     </span>
                     <span className="font-semibold">
-                      {formatDate(currentStudent.ngay_sinh)}
+                      {currentStudent.ngay_sinh}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -342,6 +334,19 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-muted-foreground font-medium whitespace-nowrap">
+                      Trúng tuyển nhờ ƯT:
+                    </span>
+                    <span className="font-medium text-blue-700 text-right">
+                      {currentStudent.tt_uutien}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {currentStudent.doat_giai && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 mb-2">
@@ -374,7 +379,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.diem_toan || "-"}
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
-                      Toán
+                      Môn 1
                     </div>
                   </div>
                   <div className="text-center p-2 bg-green-50 rounded-lg border">
@@ -382,7 +387,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.diem_sinh_hoc || "-"}
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
-                      Sinh
+                      Môn 2
                     </div>
                   </div>
                   <div className="text-center p-2 bg-purple-50 rounded-lg border">
@@ -390,7 +395,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.diem_tieng_anh || "-"}
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
-                      Anh
+                      Môn 3
                     </div>
                   </div>
                   <div className="text-center p-2 bg-orange-50 rounded-lg border">
@@ -398,7 +403,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       {currentStudent.diem_tong || "-"}
                     </div>
                     <div className="text-sm font-medium text-muted-foreground">
-                      Tổng
+                      Điểm tổng (có tính điểm ƯT)
                     </div>
                   </div>
                 </div>
@@ -417,10 +422,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                     checked={currentStudent.tinh_trang_hoc_phi}
                     onCheckedChange={handleFeeStatusChange}
                     className="h-4 w-4"
-                    disabled={
-                      currentStudent.trang_thai_duyet ===
-                      ("approved" as "approved" | "rejected" | "pending")
-                    }
+                    disabled={true}
                   />
                   <label
                     htmlFor="fee-status"
@@ -431,7 +433,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                         : "text-green-700"
                     }`}
                   >
-                    Đã đóng học phí
+                    Tình trạng học phí
                   </label>
                 </div>
               </div>
