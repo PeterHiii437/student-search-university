@@ -174,9 +174,9 @@ export default function DashboardPage() {
 
       <main className="container mx-auto px-4 py-2">
         <Tabs defaultValue="search" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="search">Tìm Kiếm & Duyệt Hồ Sơ</TabsTrigger>
-            <TabsTrigger value="stats">Thống Kê</TabsTrigger>
+          <TabsList className="w-full">
+            <TabsTrigger value="search" className="w-full"  >Tìm Kiếm & Duyệt Hồ Sơ</TabsTrigger>
+            {/* <TabsTrigger value="stats">Thống Kê</TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="search" className="space-y-4">
@@ -201,7 +201,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium whitespace-nowrap">ID Mẫu:</span>
                       <div className="flex flex-wrap gap-1">
-                        {sampleIds.map((id) => (
+                        {sampleIds.slice(0, 10).map((id) => (
                           <button
                             key={id}
                             onClick={() => handleSampleIdClick(id)}
@@ -287,7 +287,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Faculty Statistics */}
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
@@ -339,7 +339,7 @@ export default function DashboardPage() {
                   })}
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </TabsContent>
         </Tabs>
       </main>
