@@ -122,7 +122,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
       case "approved":
         return (
           <Badge className="bg-green-100 text-green-800 flex items-center gap-1 text-sm px-3 py-1">
-            <CheckCircle2 className="h-4 w-4" /> Đã duyệt
+            <CheckCircle2 className="h-4 w-4" /> Đã tiếp nhận
           </Badge>
         );
       case "rejected":
@@ -134,7 +134,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
       default:
         return (
           <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1 text-sm px-3 py-1">
-            <Clock className="h-4 w-4" /> Chờ duyệt
+            <Clock className="h-4 w-4" /> Chờ tiếp nhận
           </Badge>
         );
     }
@@ -450,14 +450,14 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold"
                     >
                       <CheckCircle2 className="h-5 w-5 mr-2" />
-                      Duyệt
+                      Tiếp nhận
                     </Button>
                   </div>
                 ) : currentStudent.trang_thai_duyet === "approved" ? (
                   <div className="space-y-2">
                     <div className="text-center p-2 bg-green-50 rounded-lg border">
                       <div className="font-semibold text-green-800 text-base">
-                        ✅ Đã duyệt
+                        ✅ Đã tiếp nhận
                       </div>
                       <div className="text-xs font-medium">
                         Bởi: {currentStudent.nguoi_duyet}
@@ -472,7 +472,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                       className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50 py-2 text-sm"
                     >
                       <Clock className="h-4 w-4 mr-1" />
-                      Hủy duyệt
+                      Hủy tiếp nhận
                     </Button>
                   </div>
                 ) : (

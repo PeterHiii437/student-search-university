@@ -65,7 +65,7 @@ async function loadStudents(): Promise<Student[]> {
       diem_toan: record["DM1"] ? parseFloat(record["DM1"]) : null,
       diem_sinh_hoc: record["DM2"] ? parseFloat(record["DM2"]) : null,
       diem_tieng_anh: record["DM3"] ? parseFloat(record["DM3"]) : null,
-      tt_uutien: record["TT_UuTien"],
+      tt_uutien: record["TT_UuTien"] || "Không",
       diem_tong: total,
     };
     return student;

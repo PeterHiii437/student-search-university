@@ -175,7 +175,7 @@ export default function DashboardPage() {
       <main className="container mx-auto px-4 py-2">
         <Tabs defaultValue="search" className="space-y-4">
           <TabsList className="w-full">
-            <TabsTrigger value="search" className="w-full"  >Tìm Kiếm & Duyệt Hồ Sơ</TabsTrigger>
+            <TabsTrigger value="search" className="w-full"  >Tìm Kiếm & Tiếp nhận Hồ Sơ</TabsTrigger>
             {/* <TabsTrigger value="stats">Thống Kê</TabsTrigger> */}
           </TabsList>
 
@@ -257,7 +257,7 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Tổng đã duyệt</CardTitle>
+                  <CardTitle className="text-sm font-medium">Tổng đã tiếp nhận</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{Object.values(MOCK_STATISTICS.facultyStats).reduce((acc, curr) => acc + curr.totalApproved, 0)}</div>
@@ -267,7 +267,7 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Chờ duyệt</CardTitle>
+                  <CardTitle className="text-sm font-medium">Chờ tiếp nhận</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-yellow-600">{Object.values(MOCK_STATISTICS.facultyStats).reduce((acc, curr) => acc + curr.pending, 0)}</div>
@@ -277,7 +277,7 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Tỷ lệ duyệt</CardTitle>
+                  <CardTitle className="text-sm font-medium">Tỷ lệ tiếp nhận</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-green-600">87%</div>
@@ -323,11 +323,11 @@ export default function DashboardPage() {
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div className="text-center">
                             <div className="text-lg font-bold text-green-600">{stats.totalApproved}</div>
-                            <div className="text-muted-foreground">Đã duyệt</div>
+                            <div className="text-muted-foreground">Đã tiếp nhận</div>
                           </div>
                           <div className="text-center">
                             <div className="text-lg font-bold text-yellow-600">{stats.pending}</div>
-                            <div className="text-muted-foreground">Chờ duyệt</div>
+                            <div className="text-muted-foreground">Chờ tiếp nhận</div>
                           </div>
                           <div className="text-center">
                             <div className="text-lg font-bold text-red-600">{stats.rejected}</div>
